@@ -6,14 +6,40 @@ import {
   AlertCircle,
   CheckCircle,
 } from 'lucide-react'
-import { useState } from 'react'
-import { contactMessagesAPI } from '../../services/api'
+import { useEffect, useState } from 'react'
+import { aboutAPI, contactMessagesAPI } from '../../services/api'
 
 export default function ContactSection() {
   const [form, setForm] = useState({ name: '', phone_number: '', message: '' })
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [contactInfo, setContactInfo] = useState({
+    whatsapp: '628123456789',
+    email: 'info@mealjun.com',
+    address: 'Jl. Contoh No. 123, Jakarta Selatan',
+  })
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const res = await aboutAPI.getPublicAbout()
+        const about = res.data.data || res.data || {}
+
+        setContactInfo({
+          whatsapp: about.whatsapp_number || '628123456789',
+          email: about.email || 'info@mealjun.com',
+          address: about.address || 'Jl. Contoh No. 123, Jakarta Selatan',
+        })
+      } catch {
+        setContactInfo({
+          whatsapp: '628123456789',
+          email: 'info@mealjun.com',
+          address: 'Jl. Contoh No. 123, Jakarta Selatan',
+        })
+      }
+    })()
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -33,12 +59,6 @@ export default function ContactSection() {
     } finally {
       setLoading(false)
     }
-  }
-
-  const contactInfo = {
-    whatsapp: '628123456789',
-    email: 'info@mealjun.com',
-    address: 'Jl. Contoh No. 123, Jakarta Selatan',
   }
 
   return (

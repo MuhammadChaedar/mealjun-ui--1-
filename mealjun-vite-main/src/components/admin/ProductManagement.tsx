@@ -18,9 +18,6 @@ interface Product {
   description: string
   price: string
   image_url: string
-  shopee_link: string
-  tiktok_link: string
-  whatsapp_link: string
   stock_status: string
   is_featured?: boolean
 }
@@ -40,11 +37,19 @@ export default function ProductManagement() {
     description: '',
     price: '',
     image_base64: '',
-    shopee_link: '',
-    tiktok_link: '',
-    whatsapp_link: '',
     stock_status: 'available',
   })
+
+  const getErrorMessage = (err: any, fallback: string) => {
+    const status = err.response?.status
+    const message =
+      err.response?.data?.message ||
+      err.response?.data?.error ||
+      err.message ||
+      fallback
+
+    return status ? `${fallback} (${status}): ${message}` : message
+  }
 
   // Fetch products
   useEffect(() => {
@@ -58,7 +63,7 @@ export default function ProductManagement() {
       const response = await productsAPI.getProducts()
       setProducts(response.data.data || response.data)
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Gagal memuat produk')
+      setError(getErrorMessage(err, 'Gagal memuat produk'))
     } finally {
       setIsLoading(false)
     }
@@ -74,9 +79,6 @@ export default function ProductManagement() {
       description: '',
       price: '',
       image_base64: '',
-      shopee_link: '',
-      tiktok_link: '',
-      whatsapp_link: '',
       stock_status: 'available',
     })
     setIsModalOpen(true)
@@ -92,9 +94,6 @@ export default function ProductManagement() {
       description: product.description,
       price: product.price,
       image_base64: '',
-      shopee_link: product.shopee_link,
-      tiktok_link: product.tiktok_link,
-      whatsapp_link: product.whatsapp_link,
       stock_status: product.stock_status,
     })
     setIsModalOpen(true)
@@ -146,7 +145,7 @@ export default function ProductManagement() {
       await loadProducts()
       setIsModalOpen(false)
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Gagal menyimpan produk')
+      setError(getErrorMessage(err, 'Gagal menyimpan produk'))
     } finally {
       setIsSaving(false)
     }
@@ -160,7 +159,7 @@ export default function ProductManagement() {
       await productsAPI.deleteProduct(id)
       await loadProducts()
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Gagal menghapus produk')
+      setError(getErrorMessage(err, 'Gagal menghapus produk'))
     }
   }
 
@@ -170,7 +169,7 @@ export default function ProductManagement() {
       await productsAPI.toggleFeatured(id)
       await loadProducts()
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Gagal mengubah featured status')
+      setError(getErrorMessage(err, 'Gagal mengubah featured status'))
     }
   }
 
@@ -180,7 +179,7 @@ export default function ProductManagement() {
       await productsAPI.updateStockStatus(id, status)
       await loadProducts()
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Gagal mengubah stock status')
+      setError(getErrorMessage(err, 'Gagal mengubah stock status'))
     }
   }
 
@@ -500,39 +499,6 @@ export default function ProductManagement() {
                       ) : null}
                     </div>
                   )}
-                </div>
-
-                <div className="grid grid-cols-3 gap-4">
-                  <input
-                    type="url"
-                    placeholder="Link Shopee"
-                    value={formData.shopee_link}
-                    onChange={(e) =>
-                      setFormData({ ...formData, shopee_link: e.target.value })
-                    }
-                    className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  />
-                  <input
-                    type="url"
-                    placeholder="Link TikTok"
-                    value={formData.tiktok_link}
-                    onChange={(e) =>
-                      setFormData({ ...formData, tiktok_link: e.target.value })
-                    }
-                    className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  />
-                  <input
-                    type="url"
-                    placeholder="Link WhatsApp"
-                    value={formData.whatsapp_link}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        whatsapp_link: e.target.value,
-                      })
-                    }
-                    className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  />
                 </div>
 
                 <select

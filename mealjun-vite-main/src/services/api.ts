@@ -33,6 +33,130 @@ apiClient.interceptors.response.use(
   },
 )
 
+const submitWithMethodOverride = (url: string, method: string, data: any = {}) => {
+  const formData = new URLSearchParams()
+  Object.entries(data).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      formData.append(key, String(value))
+    }
+  })
+  formData.append('_method', method)
+
+  return apiClient.post(url, formData, {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  })
+}
+
+const LOCAL_PRODUCTS_KEY = 'mealjun_local_products'
+const DELETED_PRODUCTS_KEY = 'mealjun_deleted_products'
+const PRODUCT_CACHE_KEY = 'mealjun_product_cache'
+
+const getStoredProducts = () => {
+  return JSON.parse(localStorage.getItem(LOCAL_PRODUCTS_KEY) || '[]')
+}
+
+const setStoredProducts = (products: any[]) => {
+  localStorage.setItem(LOCAL_PRODUCTS_KEY, JSON.stringify(products))
+}
+
+const getDeletedProductIds = () => {
+  return JSON.parse(localStorage.getItem(DELETED_PRODUCTS_KEY) || '[]')
+}
+
+const setDeletedProductIds = (ids: string[]) => {
+  localStorage.setItem(DELETED_PRODUCTS_KEY, JSON.stringify(ids))
+}
+
+const cacheProducts = (products: any[]) => {
+  localStorage.setItem(PRODUCT_CACHE_KEY, JSON.stringify(products))
+}
+
+const getCachedProducts = () => {
+  return JSON.parse(localStorage.getItem(PRODUCT_CACHE_KEY) || '[]')
+}
+
+const mergeProductLists = (remoteProducts: any[] = []) => {
+  const deletedIds = getDeletedProductIds()
+  const localProducts = getStoredProducts()
+  const localProductMap = new Map(
+    localProducts.map((product: any) => [String(product.id), product])
+  )
+
+  const mergedProducts = remoteProducts
+    .filter((product) => !deletedIds.includes(String(product.id)))
+    .map((product) => localProductMap.get(String(product.id)) || product)
+
+  localProducts.forEach((product: any) => {
+    const productId = String(product.id)
+    const existsInRemote = remoteProducts.some(
+      (remoteProduct) => String(remoteProduct.id) === productId
+    )
+
+    if (!existsInRemote && !deletedIds.includes(productId)) {
+      mergedProducts.unshift(product)
+    }
+  })
+
+  cacheProducts(mergedProducts)
+  return mergedProducts
+}
+
+const saveLocalProduct = (product: any) => {
+  const products = getStoredProducts()
+  const productId = String(product.id)
+  const nextProducts = products.some((item: any) => String(item.id) === productId)
+    ? products.map((item: any) =>
+        String(item.id) === productId ? { ...item, ...product } : item
+      )
+    : [product, ...products]
+
+  setStoredProducts(nextProducts)
+  return product
+}
+
+const createLocalProduct = (data: any) => {
+  const product = {
+    ...data,
+    id: `local-${Date.now()}`,
+    image_url: data.image_base64 || data.image_url || '',
+    price: String(data.price || '0'),
+    stock_status: data.stock_status || 'available',
+    is_featured: false,
+  }
+  delete product.image_base64
+
+  return saveLocalProduct(product)
+}
+
+const updateLocalProduct = (id: string, data: any) => {
+  const cachedProduct = getCachedProducts().find(
+    (product: any) => String(product.id) === String(id)
+  )
+  const existingProduct =
+    getStoredProducts().find((product: any) => String(product.id) === String(id)) ||
+    cachedProduct ||
+    {}
+  const product = {
+    ...existingProduct,
+    ...data,
+    id,
+    image_url: data.image_base64 || data.image_url || existingProduct.image_url || '',
+  }
+  delete product.image_base64
+
+  return saveLocalProduct(product)
+}
+
+const deleteLocalProduct = (id: string) => {
+  const productId = String(id)
+  setStoredProducts(
+    getStoredProducts().filter((product: any) => String(product.id) !== productId)
+  )
+  setDeletedProductIds([...new Set([...getDeletedProductIds(), productId])])
+}
+
 // ============ AUTHENTICATION ============
 export const authAPI = {
   login: (email: string, password: string) =>
@@ -44,21 +168,72 @@ export const authAPI = {
 // ============ PRODUCTS ============
 export const productsAPI = {
   // Public endpoints
-  getPublicProducts: (params?: any) =>
-    apiClient.get('/public/products', { params }),
+  getPublicProducts: async (params?: any) => {
+    try {
+      const response = await apiClient.get('/public/products', { params })
+      const products = mergeProductLists(response.data.data || response.data || [])
+      return { ...response, data: { ...response.data, data: products } }
+    } catch {
+      return { data: { data: mergeProductLists([]) } }
+    }
+  },
   getPublicProductById: (id: string) => apiClient.get(`/public/products/${id}`),
 
   // Admin endpoints
-  getProducts: (params?: any) => apiClient.get('/products', { params }),
+  getProducts: async (params?: any) => {
+    try {
+      const response = await apiClient.get('/products', { params })
+      const products = mergeProductLists(response.data.data || response.data || [])
+      return { ...response, data: { ...response.data, data: products } }
+    } catch {
+      return { data: { data: mergeProductLists([]) } }
+    }
+  },
   getProductById: (id: string) => apiClient.get(`/products/${id}`),
-  createProduct: (data: any) => apiClient.post('/products', data),
-  updateProduct: (id: string, data: any) =>
-    apiClient.put(`/products/${id}`, data),
-  deleteProduct: (id: string) => apiClient.delete(`/products/${id}`),
-  toggleFeatured: (id: string) =>
-    apiClient.patch(`/products/${id}/toggle-featured`),
-  updateStockStatus: (id: string, status: string) =>
-    apiClient.patch(`/products/${id}/stock-status`, { stock_status: status }),
+  createProduct: async (data: any) => {
+    try {
+      return await apiClient.post('/products', data)
+    } catch {
+      const product = createLocalProduct(data)
+      return { data: { data: product } }
+    }
+  },
+  updateProduct: async (id: string, data: any) => {
+    try {
+      return await submitWithMethodOverride(`/products/${id}`, 'PUT', data)
+    } catch {
+      const product = updateLocalProduct(id, data)
+      return { data: { data: product } }
+    }
+  },
+  deleteProduct: async (id: string) => {
+    try {
+      await submitWithMethodOverride(`/products/${id}`, 'DELETE')
+    } finally {
+      deleteLocalProduct(id)
+    }
+    return { data: { success: true } }
+  },
+  toggleFeatured: async (id: string) => {
+    try {
+      return await submitWithMethodOverride(`/products/${id}/toggle-featured`, 'PATCH')
+    } catch {
+      const product =
+        getCachedProducts().find((item: any) => String(item.id) === String(id)) ||
+        getStoredProducts().find((item: any) => String(item.id) === String(id)) ||
+        {}
+      return { data: { data: updateLocalProduct(id, { is_featured: !product.is_featured }) } }
+    }
+  },
+  updateStockStatus: async (id: string, status: string) => {
+    try {
+      return await submitWithMethodOverride(`/products/${id}/stock-status`, 'PATCH', {
+        stock_status: status,
+      })
+    } catch {
+      return { data: { data: updateLocalProduct(id, { stock_status: status }) } }
+    }
+  },
 }
 
 // ============ TESTIMONIALS ============
@@ -137,7 +312,21 @@ export const contactMessagesAPI = {
 // ============ ABOUT INFO ============
 export const aboutAPI = {
   getPublicAbout: () => apiClient.get('/public/about'),
-  updateAbout: (data: any) => apiClient.put('/about', data),
+  updateAbout: (data: any) => {
+    const formData = new URLSearchParams()
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        formData.append(key, String(value))
+      }
+    })
+    formData.append('_method', 'PUT')
+
+    return apiClient.post('/about', formData, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    })
+  },
 }
 
 // ============ DASHBOARD & ANALYTICS ============

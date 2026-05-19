@@ -91,11 +91,18 @@ export default function AboutManagement() {
     setSuccess(null)
 
     try {
-      // Hapus field yang tidak diperlukan API
-      const { image_base64, image_url, ...submitData } = formData
-      // Jika ada gambar baru, tambahkan ke submitData
-      if (image_base64) {
-        ;(submitData as any).image_base64 = image_base64
+      const submitData: Record<string, string> = {
+        title: formData.title,
+        description: formData.description,
+        vision: formData.vision,
+        mission: formData.mission,
+        whatsapp_number: formData.whatsapp_number,
+        email: formData.email,
+        address: formData.address,
+      }
+
+      if (formData.image_base64) {
+        submitData.image_base64 = formData.image_base64
       }
 
       await aboutAPI.updateAbout(submitData)
@@ -103,7 +110,16 @@ export default function AboutManagement() {
       await loadAboutData()
       setTimeout(() => setSuccess(null), 3000)
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Gagal menyimpan informasi')
+      const status = err.response?.status
+      const message =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        err.message ||
+        'Gagal menyimpan informasi'
+
+      setError(
+        status ? `Gagal menyimpan informasi (${status}): ${message}` : message,
+      )
     } finally {
       setIsSaving(false)
     }

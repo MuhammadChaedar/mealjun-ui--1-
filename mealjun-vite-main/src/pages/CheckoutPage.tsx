@@ -42,6 +42,33 @@ export default function CheckoutPage({
     event.preventDefault()
 
     const transactionCode = `MLJ-${Date.now().toString().slice(-8)}`
+    const newOrder = {
+      id: transactionCode,
+      customer_name: formData.name,
+      phone: formData.phone,
+      address: formData.address,
+      note: formData.note,
+      items: cart.map((item) => ({
+        id: item.product.id,
+        name: item.product.name,
+        price: Number(item.product.price) || 0,
+        quantity: item.quantity,
+      })),
+      subtotal: cartTotal,
+      shipping_fee: shippingFee,
+      total: grandTotal,
+      status: 'Menunggu Diproses',
+      created_at: new Date().toISOString(),
+    }
+
+    const savedOrders = JSON.parse(
+      localStorage.getItem('mealjun_orders') || '[]'
+    )
+    localStorage.setItem(
+      'mealjun_orders',
+      JSON.stringify([newOrder, ...savedOrders])
+    )
+
     setSubmittedTotal(grandTotal)
     setOrderCode(transactionCode)
     clearCart()

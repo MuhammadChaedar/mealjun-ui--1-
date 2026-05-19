@@ -56,14 +56,33 @@ interface AnalyticsData {
   }>
 }
 
+interface CustomerOrder {
+  id: string
+  customer_name: string
+  phone: string
+  items: Array<{
+    name: string
+    price: number
+    quantity: number
+  }>
+  total: number
+  status: string
+  created_at: string
+}
+
 export default function DashboardOverview() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
+  const [customerOrders, setCustomerOrders] = useState<CustomerOrder[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     loadDashboard()
+    const savedOrders = JSON.parse(
+      localStorage.getItem('mealjun_orders') || '[]'
+    )
+    setCustomerOrders(savedOrders)
   }, [])
 
   const loadDashboard = async () => {
@@ -269,128 +288,81 @@ export default function DashboardOverview() {
         </div>
       </div>
 
-      {/* Analytics Section */}
-      {analyticsData && (
-        <div className="grid lg:grid-cols-2 gap-6">
-          {/* Top Countries */}
-          <div className="bg-white border-2 border-gray-200 rounded-2xl p-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">
-              Negara Pengunjung
-            </h3>
-            <div className="space-y-3">
-              {analyticsData.top_countries.map((country, idx) => (
-                <div key={idx} className="flex items-center justify-between">
-                  <div className="flex items-center gap-3 flex-1">
-                    <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                      <span className="text-sm font-bold text-purple-600">
-                        {idx + 1}
-                      </span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">
-                        {country.visitor_country}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-24 bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-purple-500 h-2 rounded-full transition-all"
-                        style={{
-                          width: `${(country.visits / (analyticsData.top_countries[0]?.visits || 1)) * 100}%`,
-                        }}
-                      />
-                    </div>
-                    <span className="text-sm font-semibold text-gray-900 w-12 text-right">
-                      {country.visits}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Top Cities */}
-          <div className="bg-white border-2 border-gray-200 rounded-2xl p-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">
-              Kota Dengan Pengunjung Terbanyak
-            </h3>
-            <div className="space-y-3">
-              {analyticsData.top_cities.slice(0, 8).map((city, idx) => (
-                <div key={idx} className="flex items-center justify-between">
-                  <div className="flex items-center gap-3 flex-1">
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-sm font-bold text-blue-600">
-                        {idx + 1}
-                      </span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">
-                        {city.visitor_city}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-24 bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-blue-500 h-2 rounded-full transition-all"
-                        style={{
-                          width: `${(city.visits / (analyticsData.top_cities[0]?.visits || 1)) * 100}%`,
-                        }}
-                      />
-                    </div>
-                    <span className="text-sm font-semibold text-gray-900 w-12 text-right">
-                      {city.visits}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Recent Messages & Top Products */}
+      {/* Customer Orders & Top Products */}
       <div className="grid lg:grid-cols-2 gap-6">
-        {/* Recent Messages */}
+        {/* Customer Orders */}
         <div className="bg-white border-2 border-gray-200 rounded-2xl p-6">
           <h3 className="text-xl font-bold text-gray-900 mb-4">
-            Pesan Terbaru
+            Pesanan Konsumen
           </h3>
           <div className="space-y-3">
-            {dashboardData?.recent_messages.slice(0, 5).map((msg) => (
-              <div
-                key={msg.id}
-                className={`p-4 rounded-xl border-2 transition-colors ${
-                  msg.is_read
-                    ? 'bg-gray-50 border-gray-200'
-                    : 'bg-yellow-50 border-yellow-300'
-                }`}
-              >
-                <div className="flex items-start justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-semibold text-gray-900">{msg.name}</h4>
-                    {!msg.is_read && (
-                      <span className="inline-block w-2 h-2 bg-yellow-500 rounded-full"></span>
-                    )}
-                  </div>
-                </div>
-                {msg.phone_number && (
-                  <p className="text-sm text-gray-600 mb-2">
-                    {msg.phone_number}
-                  </p>
-                )}
-                <p className="text-xs text-gray-500">
-                  {new Date(msg.created_at).toLocaleDateString('id-ID', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
+            {customerOrders.length === 0 ? (
+              <div className="p-6 rounded-xl border-2 border-gray-200 bg-gray-50 text-center">
+                <p className="font-semibold text-gray-900">
+                  Belum ada pesanan konsumen
+                </p>
+                <p className="text-sm text-gray-600 mt-1">
+                  Pesanan yang dibuat dari keranjang akan tampil di sini.
                 </p>
               </div>
-            ))}
+            ) : (
+              customerOrders.slice(0, 5).map((order) => (
+                <div
+                  key={order.id}
+                  className="p-4 rounded-xl border-2 border-orange-200 bg-orange-50/40 transition-colors"
+                >
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <div>
+                      <h4 className="font-semibold text-gray-900">
+                        {order.customer_name}
+                      </h4>
+                      <p className="text-xs text-orange-600 font-semibold">
+                        {order.id}
+                      </p>
+                    </div>
+                    <span className="px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-semibold">
+                      {order.status}
+                    </span>
+                  </div>
+
+                  <p className="text-sm text-gray-600 mb-2">{order.phone}</p>
+
+                  <div className="space-y-1 mb-3">
+                    {order.items.map((item, index) => (
+                      <div
+                        key={`${order.id}-${index}`}
+                        className="flex items-center justify-between text-sm"
+                      >
+                        <span className="text-gray-700">
+                          {item.quantity} x {item.name}
+                        </span>
+                        <span className="font-semibold text-gray-900">
+                          Rp{' '}
+                          {(item.price * item.quantity).toLocaleString(
+                            'id-ID'
+                          )}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center justify-between pt-3 border-t border-orange-200">
+                    <p className="text-xs text-gray-500">
+                      {new Date(order.created_at).toLocaleDateString('id-ID', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </p>
+                    <p className="font-bold text-orange-600">
+                      Rp {order.total.toLocaleString('id-ID')}
+                    </p>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
 
