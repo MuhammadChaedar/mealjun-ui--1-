@@ -76,13 +76,13 @@ export default function GallerySection() {
         <div className="mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-3">Galeri Kami</h2>
           <p className="text-gray-600">
-            Koleksi foto produk dan momen spesial dari Mealjun
+            Koleksi foto produk dan momen spesial dari Toko Erina
           </p>
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader className="animate-spin text-orange-500 mr-2" size={32} />
+            <Loader className="animate-spin text-sky-800 mr-2" size={32} />
             <span className="text-gray-600">Memuat galeri...</span>
           </div>
         ) : gallery.length === 0 ? (
@@ -119,7 +119,7 @@ export default function GallerySection() {
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="bg-white bg-opacity-90 rounded-full p-3">
                       <svg
-                        className="w-6 h-6 text-orange-600"
+                        className="w-6 h-6 text-sky-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -209,3 +209,7 @@ export default function GallerySection() {
     </section>
   )
 }
+
+
+
+

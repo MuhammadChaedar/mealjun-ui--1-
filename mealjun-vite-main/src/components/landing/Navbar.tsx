@@ -42,7 +42,9 @@ export default function Navbar({ cartItemCount = 0 }: NavbarProps) {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex-shrink-0">
-            <span className="text-2xl font-bold text-orange-600">Mealjun</span>
+            <span className="text-2xl font-bold tracking-wide text-sky-900">
+              TOKO ERINA
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -51,7 +53,7 @@ export default function Navbar({ cartItemCount = 0 }: NavbarProps) {
               <button
                 key={item.href}
                 onClick={() => scrollToSection(item.href)}
-                className="text-gray-700 transition-colors hover:text-orange-600"
+                className="text-gray-700 transition-colors hover:text-sky-800"
               >
                 {item.label}
               </button>
@@ -59,12 +61,12 @@ export default function Navbar({ cartItemCount = 0 }: NavbarProps) {
 
             <Link
               to="/keranjang"
-              className="relative flex items-center space-x-2 text-gray-700 transition-colors hover:text-orange-600"
+              className="relative flex items-center space-x-2 text-gray-700 transition-colors hover:text-sky-800"
             >
               <ShoppingCart size={20} />
               <span>Keranjang</span>
               {cartItemCount > 0 && (
-                <span className="absolute -right-4 -top-3 min-w-5 rounded-full bg-orange-600 px-1.5 py-0.5 text-center text-xs font-bold text-white">
+                <span className="absolute -right-4 -top-3 min-w-5 rounded-full bg-sky-800 px-1.5 py-0.5 text-center text-xs font-bold text-white">
                   {cartItemCount}
                 </span>
               )}
@@ -76,7 +78,7 @@ export default function Navbar({ cartItemCount = 0 }: NavbarProps) {
                 <>
                   <Link
                     to="/admin/dashboard"
-                    className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:from-orange-600 hover:to-amber-600 shadow-lg transition-all"
+                    className="flex items-center space-x-2 rounded-lg bg-sky-800 px-4 py-2 text-white shadow-lg transition-all hover:bg-sky-900"
                   >
                     <LayoutDashboard size={18} />
                     <span>Dashboard</span>
@@ -92,7 +94,7 @@ export default function Navbar({ cartItemCount = 0 }: NavbarProps) {
               ) : (
                 <Link
                   to="/admin/login"
-                  className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-orange-100 text-orange-600 hover:bg-orange-200 transition-all"
+                  className="flex items-center space-x-2 rounded-lg bg-sky-50 px-4 py-2 text-sky-800 transition-all hover:bg-sky-100"
                 >
                   <LogIn size={18} />
                   <span>Login</span>
@@ -119,7 +121,7 @@ export default function Navbar({ cartItemCount = 0 }: NavbarProps) {
               <button
                 key={item.href}
                 onClick={() => scrollToSection(item.href)}
-                className="block w-full text-left text-gray-700 hover:text-orange-600 transition-colors"
+                className="block w-full text-left text-gray-700 transition-colors hover:text-sky-800"
               >
                 {item.label}
               </button>
@@ -128,14 +130,14 @@ export default function Navbar({ cartItemCount = 0 }: NavbarProps) {
             <Link
               to="/keranjang"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="flex items-center justify-between w-full text-gray-700 hover:text-orange-600 transition-colors"
+              className="flex w-full items-center justify-between text-gray-700 transition-colors hover:text-sky-800"
             >
               <span className="flex items-center gap-2">
                 <ShoppingCart size={18} />
                 Keranjang
               </span>
               {cartItemCount > 0 && (
-                <span className="rounded-full bg-orange-600 px-2 py-0.5 text-xs font-bold text-white">
+                <span className="rounded-full bg-sky-800 px-2 py-0.5 text-xs font-bold text-white">
                   {cartItemCount}
                 </span>
               )}
@@ -147,7 +149,7 @@ export default function Navbar({ cartItemCount = 0 }: NavbarProps) {
                 <>
                   <Link
                     to="/admin/dashboard"
-                    className="flex items-center justify-center space-x-2 w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white px-4 py-3 rounded-lg hover:from-orange-600 hover:to-amber-600 transition-colors shadow-lg"
+                    className="flex w-full items-center justify-center space-x-2 rounded-lg bg-sky-800 px-4 py-3 text-white shadow-lg transition-colors hover:bg-sky-900"
                   >
                     <LayoutDashboard size={18} />
                     <span>Admin Dashboard</span>
@@ -163,7 +165,7 @@ export default function Navbar({ cartItemCount = 0 }: NavbarProps) {
               ) : (
                 <Link
                   to="/admin/login"
-                  className="flex items-center justify-center space-x-2 w-full bg-orange-100 text-orange-600 px-4 py-3 rounded-lg hover:bg-orange-200 transition-colors"
+                  className="flex w-full items-center justify-center space-x-2 rounded-lg bg-sky-50 px-4 py-3 text-sky-800 transition-colors hover:bg-sky-100"
                 >
                   <LogIn size={18} />
                   <span>Admin Login</span>
@@ -176,3 +178,7 @@ export default function Navbar({ cartItemCount = 0 }: NavbarProps) {
     </nav>
   )
 }
+
+
+
+

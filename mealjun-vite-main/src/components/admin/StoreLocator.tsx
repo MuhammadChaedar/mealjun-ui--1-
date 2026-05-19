@@ -176,14 +176,14 @@ export default function StoreLocator() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl text-gray-900">Store Locator</h1>
+          <h1 className="text-3xl text-gray-900">Lokasi Toko</h1>
           <p className="text-gray-600 mt-2">
-            Kelola lokasi toko penjualan Mealjun
+            Kelola lokasi toko penjualan Toko Erina
           </p>
         </div>
         <button
           onClick={openAddModal}
-          className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors flex items-center gap-2"
+          className="bg-sky-800 text-white px-4 py-2 rounded-lg hover:bg-sky-900 transition-colors flex items-center gap-2"
         >
           <Plus size={20} />
           Tambah Toko
@@ -205,7 +205,7 @@ export default function StoreLocator() {
           <p className="text-gray-500 mb-4">Belum ada toko terdaftar</p>
           <button
             onClick={openAddModal}
-            className="text-orange-600 hover:text-orange-700 font-medium"
+            className="text-sky-600 hover:text-sky-700 font-medium"
           >
             Tambah toko pertama →
           </button>
@@ -215,7 +215,7 @@ export default function StoreLocator() {
           {Object.entries(groupedLocations).map(([city, cityLocations]) => (
             <div key={city} className="space-y-4">
               <h2 className="text-2xl text-gray-900 font-semibold flex items-center gap-2">
-                <MapPin size={24} className="text-orange-600" />
+                <MapPin size={24} className="text-sky-600" />
                 {city}
               </h2>
               <div className="grid gap-4">
@@ -224,7 +224,7 @@ export default function StoreLocator() {
                     key={location.id}
                     className={`rounded-2xl p-6 border-2 transition-all ${
                       location.is_active
-                        ? 'bg-white border-orange-200 shadow-lg'
+                        ? 'bg-white border-sky-200 shadow-lg'
                         : 'bg-gray-50 border-gray-200 opacity-60'
                     }`}
                   >
@@ -272,7 +272,7 @@ export default function StoreLocator() {
                             href={location.maps_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-orange-600 hover:text-orange-700 underline"
+                            className="text-sky-600 hover:text-sky-700 underline"
                           >
                             Lihat di Maps →
                           </a>
@@ -348,7 +348,7 @@ export default function StoreLocator() {
                   onChange={(e) =>
                     setFormData({ ...formData, store_name: e.target.value })
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
                   required
                 />
 
@@ -358,7 +358,7 @@ export default function StoreLocator() {
                     onChange={(e) =>
                       setFormData({ ...formData, store_type: e.target.value })
                     }
-                    className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
                   >
                     <option value="retail">Retail</option>
                     <option value="reseller">Reseller</option>
@@ -371,7 +371,7 @@ export default function StoreLocator() {
                     onChange={(e) =>
                       setFormData({ ...formData, city: e.target.value })
                     }
-                    className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
                     required
                   />
                 </div>
@@ -383,7 +383,7 @@ export default function StoreLocator() {
                   onChange={(e) =>
                     setFormData({ ...formData, address: e.target.value })
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
                   required
                 />
 
@@ -394,7 +394,7 @@ export default function StoreLocator() {
                   onChange={(e) =>
                     setFormData({ ...formData, phone: e.target.value })
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
                   required
                 />
 
@@ -405,7 +405,7 @@ export default function StoreLocator() {
                   onChange={(e) =>
                     setFormData({ ...formData, maps_url: e.target.value })
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
                 />
 
                 <label className="flex items-center gap-2 cursor-pointer">
@@ -424,7 +424,7 @@ export default function StoreLocator() {
                   <button
                     type="submit"
                     disabled={isSaving}
-                    className="flex-1 bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50"
+                    className="flex-1 bg-sky-800 text-white py-2 rounded-lg hover:bg-sky-900 transition-colors disabled:opacity-50"
                   >
                     {isSaving ? 'Menyimpan...' : 'Simpan'}
                   </button>
@@ -444,3 +444,7 @@ export default function StoreLocator() {
     </div>
   )
 }
+
+
+
+

@@ -54,7 +54,7 @@ export default function AboutManagement() {
       setError(err.response?.data?.message || 'Gagal memuat data tentang')
       // Set default values if API fails
       setFormData({
-        title: 'Tentang Mealjun',
+        title: 'Tentang Toko Erina',
         description: '',
         vision: '',
         mission: '',
@@ -138,7 +138,7 @@ export default function AboutManagement() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl text-gray-900">Manajemen Halaman Tentang</h1>
-        <p className="text-gray-600 mt-2">Edit informasi tentang Mealjun</p>
+        <p className="text-gray-600 mt-2">Edit informasi tentang Toko Erina</p>
       </div>
 
       {error && (
@@ -169,8 +169,8 @@ export default function AboutManagement() {
             onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
             }
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-            placeholder="Tentang Mealjun"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
+            placeholder="Tentang Toko Erina"
             required
           />
         </div>
@@ -182,9 +182,9 @@ export default function AboutManagement() {
             onChange={(e) =>
               setFormData({ ...formData, description: e.target.value })
             }
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
             rows={6}
-            placeholder="Deskripsi tentang Mealjun..."
+            placeholder="Deskripsi tentang Toko Erina..."
             required
           />
         </div>
@@ -197,9 +197,9 @@ export default function AboutManagement() {
               onChange={(e) =>
                 setFormData({ ...formData, vision: e.target.value })
               }
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
               rows={4}
-              placeholder="Visi Mealjun..."
+              placeholder="Visi Toko Erina..."
               required
             />
           </div>
@@ -211,9 +211,9 @@ export default function AboutManagement() {
               onChange={(e) =>
                 setFormData({ ...formData, mission: e.target.value })
               }
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
               rows={4}
-              placeholder="Misi Mealjun..."
+              placeholder="Misi Toko Erina..."
               required
             />
           </div>
@@ -298,7 +298,7 @@ export default function AboutManagement() {
                 onChange={(e) =>
                   setFormData({ ...formData, whatsapp_number: e.target.value })
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
                 placeholder="628123456789"
                 required
               />
@@ -312,8 +312,8 @@ export default function AboutManagement() {
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                placeholder="info@mealjun.com"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
+                placeholder="info@tokoerina.com"
                 required
               />
             </div>
@@ -326,7 +326,7 @@ export default function AboutManagement() {
               onChange={(e) =>
                 setFormData({ ...formData, address: e.target.value })
               }
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
               rows={3}
               placeholder="Jl. Contoh No. 123, Jakarta Selatan"
               required
@@ -338,7 +338,7 @@ export default function AboutManagement() {
           <button
             type="submit"
             disabled={isSaving}
-            className="flex-1 bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 font-semibold"
+            className="flex-1 bg-sky-800 text-white py-3 rounded-lg hover:bg-sky-900 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 font-semibold"
           >
             <Save size={20} />
             {isSaving ? 'Menyimpan...' : 'Simpan Perubahan'}
@@ -348,3 +348,6 @@ export default function AboutManagement() {
     </div>
   )
 }
+
+
+

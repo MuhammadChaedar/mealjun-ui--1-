@@ -62,10 +62,10 @@ export default function CheckoutPage({
     }
 
     const savedOrders = JSON.parse(
-      localStorage.getItem('mealjun_orders') || '[]'
+      localStorage.getItem('Toko Erina_orders') || '[]'
     )
     localStorage.setItem(
-      'mealjun_orders',
+      'Toko Erina_orders',
       JSON.stringify([newOrder, ...savedOrders])
     )
 
@@ -80,29 +80,29 @@ export default function CheckoutPage({
         <Navbar cartItemCount={0} />
         <main className="pt-28 pb-16">
           <div className="container mx-auto px-4">
-            <div className="mx-auto max-w-3xl overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-2xl">
-              <div className="bg-gradient-to-r from-orange-600 to-amber-500 px-8 py-8 text-center text-white">
+            <div className="mx-auto max-w-3xl overflow-hidden rounded-2xl border border-sky-100 bg-white shadow-2xl">
+              <div className="bg-gradient-to-r from-sky-600 to-sky-500 px-8 py-8 text-center text-white">
                 <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-white text-green-600 shadow-lg">
                   <CheckCircle2 size={44} />
                 </div>
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-100">
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-100">
                   Konfirmasi Pesanan
                 </p>
                 <h1 className="mt-3 text-4xl font-bold">
                   Pesanan Berhasil Dibuat
                 </h1>
-                <p className="mx-auto mt-3 max-w-xl text-orange-50">
+                <p className="mx-auto mt-3 max-w-xl text-sky-50">
                   Terima kasih, {formData.name || 'pelanggan'}! Pesanan kamu
-                  sudah masuk dan akan segera diproses oleh admin Mealjun.
+                  sudah masuk dan akan segera diproses oleh Admin Toko Erina.
                 </p>
               </div>
 
               <div className="p-8">
-                <div className="rounded-2xl bg-orange-50 p-5 text-center">
+                <div className="rounded-2xl bg-sky-50 p-5 text-center">
                   <p className="text-sm font-semibold text-gray-600">
                     Nomor Transaksi
                   </p>
-                  <p className="mt-2 text-3xl font-bold text-orange-600">
+                  <p className="mt-2 text-3xl font-bold text-sky-600">
                     {orderCode}
                   </p>
                   <p className="mt-2 text-sm text-gray-600">
@@ -121,7 +121,7 @@ export default function CheckoutPage({
                     </p>
                   </div>
                   <div className="rounded-xl border border-gray-100 p-4">
-                    <PackageCheck className="mb-3 text-orange-600" size={26} />
+                    <PackageCheck className="mb-3 text-sky-600" size={26} />
                     <p className="font-semibold text-gray-900">
                       Segera Diproses
                     </p>
@@ -134,7 +134,7 @@ export default function CheckoutPage({
                     <p className="font-semibold text-gray-900">
                       Total Pesanan
                     </p>
-                    <p className="mt-1 text-sm font-semibold text-orange-600">
+                    <p className="mt-1 text-sm font-semibold text-sky-600">
                       Rp {submittedTotal.toLocaleString('id-ID')}
                     </p>
                   </div>
@@ -142,13 +142,13 @@ export default function CheckoutPage({
 
                 <div className="mt-6 rounded-xl bg-green-50 px-5 py-4 text-center text-green-800">
                   Pesanan berhasil dibuat. Silakan tunggu konfirmasi dari admin
-                  Mealjun.
+                  Toko Erina.
                 </div>
 
                 <button
                   type="button"
                   onClick={() => navigate('/')}
-                  className="mx-auto mt-6 flex items-center justify-center gap-2 rounded-xl bg-orange-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-orange-700"
+                  className="mx-auto mt-6 flex items-center justify-center gap-2 rounded-xl bg-sky-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-sky-700"
                 >
                   <Home size={20} />
                   Kembali ke Beranda
@@ -187,7 +187,7 @@ export default function CheckoutPage({
               </p>
               <Link
                 to="/#produk"
-                className="mt-6 inline-flex items-center justify-center rounded-xl bg-orange-600 px-5 py-3 font-semibold text-white transition-colors hover:bg-orange-700"
+                className="mt-6 inline-flex items-center justify-center rounded-xl bg-sky-600 px-5 py-3 font-semibold text-white transition-colors hover:bg-sky-700"
               >
                 Pilih Produk
               </Link>
@@ -199,7 +199,7 @@ export default function CheckoutPage({
             >
               <section className="rounded-2xl border border-gray-100 bg-white p-6 shadow-lg">
                 <div className="mb-5 flex items-center gap-3">
-                  <MapPin className="text-orange-600" size={24} />
+                  <MapPin className="text-sky-600" size={24} />
                   <h2 className="text-2xl font-bold text-gray-900">
                     Data Pembeli
                   </h2>
@@ -216,7 +216,7 @@ export default function CheckoutPage({
                       onChange={(event) =>
                         setFormData({ ...formData, name: event.target.value })
                       }
-                      className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-700"
                       placeholder="Nama penerima"
                     />
                   </label>
@@ -234,7 +234,7 @@ export default function CheckoutPage({
                           phone: event.target.value,
                         })
                       }
-                      className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-700"
                       placeholder="08xxxxxxxxxx"
                     />
                   </label>
@@ -254,7 +254,7 @@ export default function CheckoutPage({
                         address: event.target.value,
                       })
                     }
-                    className="mt-2 w-full resize-none rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="mt-2 w-full resize-none rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-700"
                     placeholder="Tulis alamat lengkap"
                   />
                 </label>
@@ -269,7 +269,7 @@ export default function CheckoutPage({
                     onChange={(event) =>
                       setFormData({ ...formData, note: event.target.value })
                     }
-                    className="mt-2 w-full resize-none rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="mt-2 w-full resize-none rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-700"
                     placeholder="Opsional"
                   />
                 </label>
@@ -277,7 +277,7 @@ export default function CheckoutPage({
 
               <aside className="h-fit rounded-2xl border border-gray-100 bg-white p-6 shadow-lg">
                 <div className="mb-5 flex items-center gap-3">
-                  <Truck className="text-orange-600" size={24} />
+                  <Truck className="text-sky-600" size={24} />
                   <h2 className="text-xl font-bold text-gray-900">
                     Ringkasan Pesanan
                   </h2>
@@ -321,14 +321,14 @@ export default function CheckoutPage({
 
                 <div className="mt-5 flex items-center justify-between">
                   <span className="font-semibold text-gray-900">Total</span>
-                  <span className="text-2xl font-bold text-orange-600">
+                  <span className="text-2xl font-bold text-sky-600">
                     Rp {grandTotal.toLocaleString('id-ID')}
                   </span>
                 </div>
 
                 <button
                   type="submit"
-                  className="mt-6 flex w-full items-center justify-center rounded-xl bg-orange-600 px-5 py-3 font-semibold text-white transition-colors hover:bg-orange-700"
+                  className="mt-6 flex w-full items-center justify-center rounded-xl bg-sky-600 px-5 py-3 font-semibold text-white transition-colors hover:bg-sky-700"
                 >
                   Buat Transaksi
                 </button>
@@ -342,3 +342,7 @@ export default function CheckoutPage({
     </div>
   )
 }
+
+
+
+

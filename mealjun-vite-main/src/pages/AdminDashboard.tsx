@@ -11,7 +11,7 @@ import ContactMessagesManagement from '../components/admin/ContactMessagesManage
 
 export default function AdminDashboard() {
   return (
-    <div className="min-h-screen bg-gray-50 w-full">
+    <div className="min-h-screen w-full bg-slate-50">
       <AdminSidebar />
 
       <div className="ml-64 w-[calc(100%-256px)] flex flex-col min-h-screen">
@@ -39,3 +39,7 @@ export default function AdminDashboard() {
     </div>
   )
 }
+
+
+
+

@@ -16,7 +16,7 @@ export default function ContactSection() {
   const [error, setError] = useState<string | null>(null)
   const [contactInfo, setContactInfo] = useState({
     whatsapp: '628123456789',
-    email: 'info@mealjun.com',
+    email: 'info@tokoerina.com',
     address: 'Jl. Contoh No. 123, Jakarta Selatan',
   })
 
@@ -28,13 +28,13 @@ export default function ContactSection() {
 
         setContactInfo({
           whatsapp: about.whatsapp_number || '628123456789',
-          email: about.email || 'info@mealjun.com',
+          email: about.email || 'info@tokoerina.com',
           address: about.address || 'Jl. Contoh No. 123, Jakarta Selatan',
         })
       } catch {
         setContactInfo({
           whatsapp: '628123456789',
-          email: 'info@mealjun.com',
+          email: 'info@tokoerina.com',
           address: 'Jl. Contoh No. 123, Jakarta Selatan',
         })
       }
@@ -69,7 +69,7 @@ export default function ContactSection() {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="inline-block bg-orange-100 text-orange-600 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+          <div className="inline-block bg-sky-100 text-sky-600 px-4 py-2 rounded-full text-sm font-semibold mb-4">
             Kontak
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -99,7 +99,7 @@ export default function ContactSection() {
                       href={`https://wa.me/${contactInfo.whatsapp}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-lg font-semibold text-gray-900 hover:text-orange-600 transition-colors"
+                      className="text-lg font-semibold text-gray-900 hover:text-sky-600 transition-colors"
                     >
                       +{contactInfo.whatsapp}
                     </a>
@@ -115,7 +115,7 @@ export default function ContactSection() {
                     <div className="text-sm text-gray-500 mb-1">Email</div>
                     <a
                       href={`mailto:${contactInfo.email}`}
-                      className="text-lg font-semibold text-gray-900 hover:text-orange-600 transition-colors"
+                      className="text-lg font-semibold text-gray-900 hover:text-sky-600 transition-colors"
                     >
                       {contactInfo.email}
                     </a>
@@ -124,8 +124,8 @@ export default function ContactSection() {
 
                 {/* Address */}
                 <div className="flex items-start space-x-4 bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-orange-100 to-amber-100 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="text-orange-600" size={24} />
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-sky-100 to-sky-100 flex items-center justify-center flex-shrink-0">
+                    <MapPin className="text-sky-600" size={24} />
                   </div>
                   <div>
                     <div className="text-sm text-gray-500 mb-1">Alamat</div>
@@ -138,7 +138,7 @@ export default function ContactSection() {
             </div>
 
             {/* Operating Hours */}
-            <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-3xl p-8 border border-orange-200">
+            <div className="bg-gradient-to-br from-sky-50 to-sky-50 rounded-3xl p-8 border border-sky-200">
               <h4 className="text-xl font-bold text-gray-900 mb-4">
                 Jam Operasional
               </h4>
@@ -147,15 +147,15 @@ export default function ContactSection() {
                   <span className="font-semibold">Senin - Jumat</span>
                   <span>08:00 - 17:00</span>
                 </div>
-                <div className="border-t border-orange-200"></div>
+                <div className="border-t border-sky-200"></div>
                 <div className="flex justify-between">
                   <span className="font-semibold">Sabtu</span>
                   <span>08:00 - 14:00</span>
                 </div>
-                <div className="border-t border-orange-200"></div>
+                <div className="border-t border-sky-200"></div>
                 <div className="flex justify-between">
                   <span className="font-semibold">Minggu</span>
-                  <span className="text-orange-600">Tutup</span>
+                  <span className="text-sky-600">Tutup</span>
                 </div>
               </div>
             </div>
@@ -210,7 +210,7 @@ export default function ContactSection() {
                   type="text"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-700 transition-all"
                   placeholder="Masukkan nama Anda"
                   required
                   disabled={loading}
@@ -225,7 +225,7 @@ export default function ContactSection() {
                   type="phone_number"
                   value={form.phone_number}
                   onChange={(e) => setForm({ ...form, phone_number: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-700 transition-all"
                   placeholder="6281*******"
                   required
                   disabled={loading}
@@ -241,7 +241,7 @@ export default function ContactSection() {
                   onChange={(e) =>
                     setForm({ ...form, message: e.target.value })
                   }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all resize-none"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-700 transition-all resize-none"
                   rows={5}
                   placeholder="Tulis pesan Anda di sini..."
                   required
@@ -252,7 +252,7 @@ export default function ContactSection() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4 rounded-xl hover:from-orange-600 hover:to-amber-600 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+                className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-sky-500 to-sky-500 text-white py-4 rounded-xl hover:from-sky-600 hover:to-sky-600 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
               >
                 <Send size={20} />
                 <span>{loading ? 'Mengirim...' : 'Kirim Pesan'}</span>
@@ -264,3 +264,7 @@ export default function ContactSection() {
     </section>
   )
 }
+
+
+
+

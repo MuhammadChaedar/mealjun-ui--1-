@@ -62,7 +62,7 @@ export default function ProductSection({ addToCart }: ProductSectionProps) {
 
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader className="animate-spin text-orange-500 mr-2" size={32} />
+            <Loader className="animate-spin text-sky-800 mr-2" size={32} />
             <span className="text-gray-600">Memuat produk...</span>
           </div>
         ) : (
@@ -88,9 +88,9 @@ export default function ProductSection({ addToCart }: ProductSectionProps) {
                     >
                       {stock.label}
                     </div>
-                    {/* Featured Badge */}
+                    {/* Unggulan Badge */}
                     {p.is_featured && (
-                      <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-semibold bg-orange-500 text-white">
+                      <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-semibold bg-sky-800 text-white">
                         ⭐ Unggulan
                       </div>
                     )}
@@ -100,7 +100,7 @@ export default function ProductSection({ addToCart }: ProductSectionProps) {
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="bg-white bg-opacity-90 rounded-full p-3">
                         <svg
-                          className="w-6 h-6 text-orange-600"
+                          className="w-6 h-6 text-sky-600"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -123,7 +123,7 @@ export default function ProductSection({ addToCart }: ProductSectionProps) {
                       <h3 className="font-bold text-lg text-gray-900 mb-1">
                         {p.name}
                       </h3>
-                      <p className="text-sm text-orange-600 font-semibold">
+                      <p className="text-sm text-sky-600 font-semibold">
                         {p.flavor}
                       </p>
                     </div>
@@ -135,7 +135,7 @@ export default function ProductSection({ addToCart }: ProductSectionProps) {
 
                     {/* Price */}
                     <div className="pt-2 border-t border-gray-200">
-                      <p className="text-2xl font-bold text-orange-600">
+                      <p className="text-2xl font-bold text-sky-600">
                         Rp {p.price?.toLocaleString('id-ID')}
                       </p>
                     </div>
@@ -149,7 +149,7 @@ export default function ProductSection({ addToCart }: ProductSectionProps) {
                           addToCart(p)
                         }}
                         disabled={p.stock_status === 'out_of_stock'}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-orange-600 hover:bg-orange-700 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed text-white transition-colors text-sm font-semibold"
+                        className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed text-white transition-colors text-sm font-semibold"
                       >
                         <ShoppingCart size={18} />
                         <span>
@@ -212,7 +212,7 @@ export default function ProductSection({ addToCart }: ProductSectionProps) {
                   {getStockStatus(selectedProduct.stock_status).label}
                 </div>
                 {selectedProduct.is_featured && (
-                  <div className="absolute top-4 left-4 px-4 py-2 rounded-full text-sm font-semibold bg-orange-500 text-white">
+                  <div className="absolute top-4 left-4 px-4 py-2 rounded-full text-sm font-semibold bg-sky-800 text-white">
                     ⭐ Unggulan
                   </div>
                 )}
@@ -225,10 +225,10 @@ export default function ProductSection({ addToCart }: ProductSectionProps) {
                   <h2 className="text-4xl font-bold text-gray-900 mb-2">
                     {selectedProduct.name}
                   </h2>
-                  <p className="text-xl text-orange-600 font-semibold mb-4">
+                  <p className="text-xl text-sky-600 font-semibold mb-4">
                     {selectedProduct.flavor}
                   </p>
-                  <p className="text-3xl font-bold text-orange-600">
+                  <p className="text-3xl font-bold text-sky-600">
                     Rp {selectedProduct.price?.toLocaleString('id-ID')}
                   </p>
                 </div>
@@ -261,7 +261,7 @@ export default function ProductSection({ addToCart }: ProductSectionProps) {
                       setSelectedProduct(null)
                     }}
                     disabled={selectedProduct.stock_status === 'out_of_stock'}
-                    className="w-full flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed text-white px-4 py-3 rounded-xl transition-colors font-semibold"
+                    className="w-full flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-700 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed text-white px-4 py-3 rounded-xl transition-colors font-semibold"
                   >
                     <ShoppingCart size={20} />
                     <span>
@@ -279,3 +279,7 @@ export default function ProductSection({ addToCart }: ProductSectionProps) {
     </section>
   )
 }
+
+
+
+

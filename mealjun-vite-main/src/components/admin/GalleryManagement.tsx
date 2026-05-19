@@ -136,12 +136,12 @@ export default function GalleryManagement() {
         <div>
           <h1 className="text-3xl text-gray-900">Manajemen Galeri</h1>
           <p className="text-gray-600 mt-2">
-            Kelola foto produk dan momen Mealjun
+            Kelola foto produk dan momen Toko Erina
           </p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors flex items-center gap-2"
+          className="bg-sky-800 text-white px-4 py-2 rounded-lg hover:bg-sky-900 transition-colors flex items-center gap-2"
         >
           <Plus size={20} />
           Tambah Foto
@@ -163,7 +163,7 @@ export default function GalleryManagement() {
           <p className="text-gray-500 mb-4">Belum ada foto di galeri</p>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="text-orange-600 hover:text-orange-700 font-medium"
+            className="text-sky-600 hover:text-sky-700 font-medium"
           >
             Tambah foto pertama →
           </button>
@@ -317,7 +317,7 @@ export default function GalleryManagement() {
                     onChange={(e) =>
                       setFormData({ ...formData, caption: e.target.value })
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
                     rows={3}
                     required
                   />
@@ -327,7 +327,7 @@ export default function GalleryManagement() {
                   <button
                     type="submit"
                     disabled={isSaving}
-                    className="flex-1 bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50"
+                    className="flex-1 bg-sky-800 text-white py-2 rounded-lg hover:bg-sky-900 transition-colors disabled:opacity-50"
                   >
                     {isSaving ? 'Menyimpan...' : 'Tambah Foto'}
                   </button>
@@ -347,3 +347,7 @@ export default function GalleryManagement() {
     </div>
   )
 }
+
+
+
+

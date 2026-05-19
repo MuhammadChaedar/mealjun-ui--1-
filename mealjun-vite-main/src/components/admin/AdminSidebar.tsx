@@ -16,16 +16,27 @@ export default function AdminSidebar() {
     { icon: Info, label: 'Tentang', path: '/admin/about' },
     { icon: Image, label: 'Galeri', path: '/admin/gallery' },
     { icon: Star, label: 'Testimoni', path: '/admin/testimonials' },
-    { icon: MapPin, label: 'Store Locator', path: '/admin/store-locator' },
+    { icon: MapPin, label: 'Lokasi Toko', path: '/admin/store-locator' },
     { icon: Mail, label: 'Pesan Kontak', path: '/admin/contact-messages' },
   ]
 
   return (
-    <aside className="w-64 h-[100vh] h-full fixed left-0 top-0 z-50 bg-white border-r border-gray-200 flex flex-col">
+    <aside className="fixed left-0 top-0 z-50 flex h-full h-[100vh] w-64 flex-col border-r border-slate-200 bg-white">
       {/* Logo */}
-      <div className="p-6 border-b border-gray-200">
-        <h1 className="text-2xl text-orange-600">Mealjun</h1>
-        <p className="text-sm text-gray-500 mt-1">Admin Panel</p>
+      <div className="border-b border-slate-200 p-6">
+        <div className="flex items-center gap-3">
+          <img
+            src="/toko-erina-logo.svg"
+            alt="Logo Toko Erina"
+            className="h-12 w-12 rounded-xl border border-sky-100 bg-sky-50 object-contain p-1"
+          />
+          <div>
+            <h1 className="text-xl font-bold tracking-wide text-sky-900">
+              Toko Erina
+            </h1>
+            <p className="mt-1 text-sm text-gray-500">Admin Panel</p>
+          </div>
+        </div>
       </div>
 
       {/* Navigation */}
@@ -37,8 +48,8 @@ export default function AdminSidebar() {
             className={({ isActive }) =>
               `flex items-center space-x-3 px-4 py-3 rounded-xl transition-colors ${
                 isActive
-                  ? 'bg-orange-50 text-orange-600'
-                  : 'text-gray-700 hover:bg-gray-50'
+                  ? 'bg-sky-50 text-sky-800'
+                  : 'text-gray-700 hover:bg-slate-50 hover:text-sky-800'
               }`
             }
           >
@@ -50,3 +61,7 @@ export default function AdminSidebar() {
     </aside>
   )
 }
+
+
+
+

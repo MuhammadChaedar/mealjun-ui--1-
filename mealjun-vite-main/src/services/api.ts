@@ -49,9 +49,9 @@ const submitWithMethodOverride = (url: string, method: string, data: any = {}) =
   })
 }
 
-const LOCAL_PRODUCTS_KEY = 'mealjun_local_products'
-const DELETED_PRODUCTS_KEY = 'mealjun_deleted_products'
-const PRODUCT_CACHE_KEY = 'mealjun_product_cache'
+const LOCAL_PRODUCTS_KEY = 'Toko Erina_local_products'
+const DELETED_PRODUCTS_KEY = 'Toko Erina_deleted_products'
+const PRODUCT_CACHE_KEY = 'Toko Erina_product_cache'
 
 const getStoredProducts = () => {
   return JSON.parse(localStorage.getItem(LOCAL_PRODUCTS_KEY) || '[]')
@@ -157,6 +157,8 @@ const deleteLocalProduct = (id: string) => {
   setDeletedProductIds([...new Set([...getDeletedProductIds(), productId])])
 }
 
+const isLocalProductId = (id: string) => String(id).startsWith('local-')
+
 // ============ AUTHENTICATION ============
 export const authAPI = {
   login: (email: string, password: string) =>
@@ -207,10 +209,19 @@ export const productsAPI = {
     }
   },
   deleteProduct: async (id: string) => {
+    if (isLocalProductId(id)) {
+      deleteLocalProduct(id)
+      return { data: { success: true } }
+    }
+
     try {
       await submitWithMethodOverride(`/products/${id}`, 'DELETE')
-    } finally {
       deleteLocalProduct(id)
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        deleteLocalProduct(id)
+      }
+      throw error
     }
     return { data: { success: true } }
   },
@@ -346,3 +357,6 @@ export const analyticsTrackingAPI = {
 }
 
 export default apiClient
+
+
+

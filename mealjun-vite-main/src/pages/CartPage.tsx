@@ -39,18 +39,18 @@ export default function CartPage({
 
           {cart.length === 0 ? (
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-10 text-center">
-              <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-orange-50 text-orange-600">
+              <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-sky-50 text-sky-600">
                 <ShoppingCart size={30} />
               </div>
               <h2 className="text-2xl font-bold text-gray-900">
                 Keranjang masih kosong
               </h2>
               <p className="mt-2 text-gray-600">
-                Tambahkan produk dari halaman produk Mealjun.
+                Tambahkan produk dari halaman produk Toko Erina.
               </p>
               <Link
                 to="/#produk"
-                className="mt-6 inline-flex items-center justify-center rounded-xl bg-orange-600 px-5 py-3 font-semibold text-white transition-colors hover:bg-orange-700"
+                className="mt-6 inline-flex items-center justify-center rounded-xl bg-sky-600 px-5 py-3 font-semibold text-white transition-colors hover:bg-sky-700"
               >
                 Lihat Produk
               </Link>
@@ -83,7 +83,7 @@ export default function CartPage({
                           <h3 className="font-semibold text-gray-900 truncate">
                             {item.product.name}
                           </h3>
-                          <p className="text-sm text-orange-600 font-medium">
+                          <p className="text-sm text-sky-600 font-medium">
                             Rp {item.product.price?.toLocaleString('id-ID')}
                           </p>
                         </div>
@@ -159,19 +159,19 @@ export default function CartPage({
                 </div>
                 <div className="mt-5 flex items-center justify-between">
                   <span className="font-semibold text-gray-900">Total</span>
-                  <span className="text-2xl font-bold text-orange-600">
+                  <span className="text-2xl font-bold text-sky-600">
                     Rp {cartTotal.toLocaleString('id-ID')}
                   </span>
                 </div>
                 <Link
                   to="/#produk"
-                  className="mt-6 flex w-full items-center justify-center rounded-xl border border-orange-600 px-5 py-3 font-semibold text-orange-600 transition-colors hover:bg-orange-50"
+                  className="mt-6 flex w-full items-center justify-center rounded-xl border border-sky-600 px-5 py-3 font-semibold text-sky-600 transition-colors hover:bg-sky-50"
                 >
                   Tambah Produk Lain
                 </Link>
                 <Link
                   to="/pembayaran"
-                  className="mt-3 flex w-full items-center justify-center rounded-xl bg-orange-600 px-5 py-3 font-semibold text-white transition-colors hover:bg-orange-700"
+                  className="mt-3 flex w-full items-center justify-center rounded-xl bg-sky-600 px-5 py-3 font-semibold text-white transition-colors hover:bg-sky-700"
                 >
                   Lanjut Pembayaran
                 </Link>
@@ -185,3 +185,7 @@ export default function CartPage({
     </div>
   )
 }
+
+
+
+

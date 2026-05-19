@@ -160,7 +160,7 @@ export default function ContactMessagesManagement() {
           }}
           className={`px-4 py-2 rounded-lg transition-colors ${
             filterRead === null
-              ? 'bg-orange-100 text-orange-600'
+              ? 'bg-sky-100 text-sky-600'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
@@ -196,7 +196,7 @@ export default function ContactMessagesManagement() {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader className="animate-spin mr-2 text-orange-600" />
+          <Loader className="animate-spin mr-2 text-sky-600" />
           <span className="text-gray-600">Memuat pesan...</span>
         </div>
       ) : messages.length === 0 ? (
@@ -332,7 +332,7 @@ export default function ContactMessagesManagement() {
               onClick={(e) => e.stopPropagation()}
             >
               <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2 mb-6">
-                <MessageSquare size={24} className="text-orange-600" />
+                <MessageSquare size={24} className="text-sky-600" />
                 Detail Pesan
               </h2>
 
@@ -512,3 +512,7 @@ export default function ContactMessagesManagement() {
     </div>
   )
 }
+
+
+
+

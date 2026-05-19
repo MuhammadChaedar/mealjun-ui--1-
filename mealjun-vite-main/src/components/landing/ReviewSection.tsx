@@ -38,7 +38,7 @@ export default function ReviewSection() {
   const AvatarPlaceholder = ({ name }: { name: string }) => {
     const initial = name.charAt(0).toUpperCase()
     return (
-      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-lg">
+      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-sky-400 to-sky-600 flex items-center justify-center text-white font-bold text-lg">
         {initial}
       </div>
     )
@@ -55,13 +55,13 @@ export default function ReviewSection() {
             Testimoni Pelanggan
           </h2>
           <p className="text-gray-600">
-            Dengarkan apa yang pelanggan kami katakan tentang produk Mealjun
+            Dengarkan apa yang pelanggan kami katakan tentang produk Toko Erina
           </p>
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader className="animate-spin text-orange-500 mr-2" size={32} />
+            <Loader className="animate-spin text-sky-800 mr-2" size={32} />
             <span className="text-gray-600">Memuat testimoni...</span>
           </div>
         ) : reviews.length === 0 ? (
@@ -75,15 +75,15 @@ export default function ReviewSection() {
                 key={r.id}
                 className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-gray-100 relative"
               >
-                {/* Featured Badge */}
+                {/* Unggulan Badge */}
                 {r.is_featured && (
-                  <div className="absolute top-4 right-4 bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                    ⭐ Featured
+                  <div className="absolute top-4 right-4 bg-sky-800 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                    ⭐ Unggulan
                   </div>
                 )}
 
                 {/* Quote Mark */}
-                <div className="text-6xl text-orange-200 leading-none mb-2">
+                <div className="text-6xl text-sky-200 leading-none mb-2">
                   "
                 </div>
 
@@ -132,3 +132,7 @@ export default function ReviewSection() {
     </section>
   )
 }
+
+
+
+

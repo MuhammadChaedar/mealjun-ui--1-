@@ -9,13 +9,13 @@ export default function Footer() {
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           {/* Brand */}
           <div>
-            <h3 className="text-2xl mb-4 text-orange-400">Mealjun</h3>
+            <h3 className="text-2xl mb-4 text-sky-400">Toko Erina</h3>
             <p className="text-gray-400 mb-4">
-              Keripik lumpia berkualitas dengan berbagai pilihan rasa. Dibuat
+              sembako berkualitas dengan berbagai pilihan rasa. Dibuat
               dengan cinta dan bahan pilihan.
             </p>
             <p className="text-sm text-gray-500">
-              © {currentYear} Mealjun. All rights reserved.
+              © {currentYear} Toko Erina. All rights reserved.
             </p>
           </div>
 
@@ -26,7 +26,7 @@ export default function Footer() {
               <li>
                 <a
                   href="#beranda"
-                  className="hover:text-orange-400 transition-colors"
+                  className="hover:text-sky-400 transition-colors"
                 >
                   Beranda
                 </a>
@@ -34,7 +34,7 @@ export default function Footer() {
               <li>
                 <a
                   href="#tentang"
-                  className="hover:text-orange-400 transition-colors"
+                  className="hover:text-sky-400 transition-colors"
                 >
                   Tentang
                 </a>
@@ -42,7 +42,7 @@ export default function Footer() {
               <li>
                 <a
                   href="#galeri"
-                  className="hover:text-orange-400 transition-colors"
+                  className="hover:text-sky-400 transition-colors"
                 >
                   Galeri
                 </a>
@@ -50,7 +50,7 @@ export default function Footer() {
               <li>
                 <a
                   href="#produk"
-                  className="hover:text-orange-400 transition-colors"
+                  className="hover:text-sky-400 transition-colors"
                 >
                   Produk
                 </a>
@@ -58,7 +58,7 @@ export default function Footer() {
               <li>
                 <a
                   href="#review"
-                  className="hover:text-orange-400 transition-colors"
+                  className="hover:text-sky-400 transition-colors"
                 >
                   Review
                 </a>
@@ -66,7 +66,7 @@ export default function Footer() {
               <li>
                 <a
                   href="#kontak"
-                  className="hover:text-orange-400 transition-colors"
+                  className="hover:text-sky-400 transition-colors"
                 >
                   Kontak
                 </a>
@@ -98,10 +98,14 @@ export default function Footer() {
           <p className="flex items-center justify-center space-x-1">
             <span>Made with</span>
             <Heart size={16} className="text-red-500 fill-red-500" />
-            <span>by Mealjun Team</span>
+            <span>by Toko Erina Team</span>
           </p>
         </div>
       </div>
     </footer>
   )
 }
+
+
+
+

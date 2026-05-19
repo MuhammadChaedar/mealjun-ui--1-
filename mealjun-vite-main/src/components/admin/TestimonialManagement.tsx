@@ -154,7 +154,7 @@ export default function TestimonialManagement() {
       await testimonialsAPI.toggleFeatured(id)
       await loadTestimonials()
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Gagal mengubah featured status')
+      setError(err.response?.data?.message || 'Gagal mengubah status unggulan')
     }
   }
 
@@ -178,7 +178,7 @@ export default function TestimonialManagement() {
         </div>
         <button
           onClick={openAddModal}
-          className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors flex items-center gap-2"
+          className="bg-sky-800 text-white px-4 py-2 rounded-lg hover:bg-sky-900 transition-colors flex items-center gap-2"
         >
           <Plus size={20} />
           Tambah Testimoni
@@ -200,7 +200,7 @@ export default function TestimonialManagement() {
           <p className="text-gray-500 mb-4">Belum ada testimoni</p>
           <button
             onClick={openAddModal}
-            className="text-orange-600 hover:text-orange-700 font-medium"
+            className="text-sky-600 hover:text-sky-700 font-medium"
           >
             Tambah testimoni pertama →
           </button>
@@ -255,7 +255,7 @@ export default function TestimonialManagement() {
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       }`}
                     >
-                      ⭐ Featured
+                      ⭐ Unggulan
                     </button>
                     <button
                       onClick={() => openEditModal(testimonial)}
@@ -313,7 +313,7 @@ export default function TestimonialManagement() {
                   onChange={(e) =>
                     setFormData({ ...formData, customer_name: e.target.value })
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
                   required
                 />
 
@@ -327,7 +327,7 @@ export default function TestimonialManagement() {
                       customer_location: e.target.value,
                     })
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
                   required
                 />
 
@@ -343,7 +343,7 @@ export default function TestimonialManagement() {
                         rating: parseInt(e.target.value),
                       })
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
                   >
                     <option value="5">5 Bintang - Sangat Puas</option>
                     <option value="4">4 Bintang - Puas</option>
@@ -359,7 +359,7 @@ export default function TestimonialManagement() {
                   onChange={(e) =>
                     setFormData({ ...formData, review_text: e.target.value })
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
                   rows={4}
                   required
                 />
@@ -437,7 +437,7 @@ export default function TestimonialManagement() {
                     className="w-4 h-4 rounded border-gray-300"
                   />
                   <span className="text-sm text-gray-700">
-                    Tampilkan di halaman utama (Featured)
+                    Tampilkan di halaman utama (Unggulan)
                   </span>
                 </label>
 
@@ -445,7 +445,7 @@ export default function TestimonialManagement() {
                   <button
                     type="submit"
                     disabled={isSaving}
-                    className="flex-1 bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50"
+                    className="flex-1 bg-sky-800 text-white py-2 rounded-lg hover:bg-sky-900 transition-colors disabled:opacity-50"
                   >
                     {isSaving ? 'Menyimpan...' : 'Simpan'}
                   </button>
@@ -465,3 +465,7 @@ export default function TestimonialManagement() {
     </div>
   )
 }
+
+
+
+

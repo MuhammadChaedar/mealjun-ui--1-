@@ -80,7 +80,7 @@ export default function DashboardOverview() {
   useEffect(() => {
     loadDashboard()
     const savedOrders = JSON.parse(
-      localStorage.getItem('mealjun_orders') || '[]'
+      localStorage.getItem('Toko Erina_orders') || '[]'
     )
     setCustomerOrders(savedOrders)
   }, [])
@@ -141,13 +141,13 @@ export default function DashboardOverview() {
         <div>
           <h1 className="text-4xl font-bold text-gray-900">Dashboard</h1>
           <p className="text-gray-600 mt-2">
-            Ringkasan lengkap bisnis Mealjun Anda
+            Ringkasan lengkap operasional Toko Erina
           </p>
         </div>
         <button
           onClick={loadDashboard}
           disabled={loading}
-          className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:opacity-50 transition-colors font-medium flex items-center gap-2"
+          className="px-6 py-2 bg-sky-800 text-white rounded-lg hover:bg-sky-900 disabled:opacity-50 transition-colors font-medium flex items-center gap-2"
         >
           <Zap size={18} />
           Refresh
@@ -157,20 +157,20 @@ export default function DashboardOverview() {
       {/* Summary Stats - 4 Columns */}
       <div className="grid md:grid-cols-4 gap-5">
         {/* Total Products */}
-        <div className="bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-200 rounded-2xl p-6">
+        <div className="bg-gradient-to-br from-sky-50 to-sky-100 border-2 border-sky-200 rounded-2xl p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <p className="text-sm text-orange-600 font-medium mb-1">
+              <p className="text-sm text-sky-800 font-medium mb-1">
                 Total Produk
               </p>
-              <p className="text-3xl font-bold text-orange-900">
+              <p className="text-3xl font-bold text-sky-950">
                 {summary?.total_products || 0}
               </p>
             </div>
-            <Package size={32} className="text-orange-500 opacity-20" />
+            <Package size={32} className="text-sky-700 opacity-20" />
           </div>
-          <div className="text-xs text-orange-700">
-            {summary?.featured_products || 0} di-featured
+          <div className="text-xs text-sky-700">
+            {summary?.featured_products || 0} unggulan
           </div>
         </div>
 
@@ -309,14 +309,14 @@ export default function DashboardOverview() {
               customerOrders.slice(0, 5).map((order) => (
                 <div
                   key={order.id}
-                  className="p-4 rounded-xl border-2 border-orange-200 bg-orange-50/40 transition-colors"
+                  className="p-4 rounded-xl border-2 border-sky-200 bg-sky-50/50 transition-colors"
                 >
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div>
                       <h4 className="font-semibold text-gray-900">
                         {order.customer_name}
                       </h4>
-                      <p className="text-xs text-orange-600 font-semibold">
+                      <p className="text-xs text-sky-800 font-semibold">
                         {order.id}
                       </p>
                     </div>
@@ -346,7 +346,7 @@ export default function DashboardOverview() {
                     ))}
                   </div>
 
-                  <div className="flex items-center justify-between pt-3 border-t border-orange-200">
+                  <div className="flex items-center justify-between pt-3 border-t border-sky-200">
                     <p className="text-xs text-gray-500">
                       {new Date(order.created_at).toLocaleDateString('id-ID', {
                         day: 'numeric',
@@ -356,7 +356,7 @@ export default function DashboardOverview() {
                         minute: '2-digit',
                       })}
                     </p>
-                    <p className="font-bold text-orange-600">
+                    <p className="font-bold text-sky-800">
                       Rp {order.total.toLocaleString('id-ID')}
                     </p>
                   </div>
@@ -375,11 +375,11 @@ export default function DashboardOverview() {
             {dashboardData?.top_products.slice(0, 5).map((product, idx) => (
               <div
                 key={product.id}
-                className="p-4 bg-gradient-to-r from-orange-50 to-transparent rounded-xl border-2 border-orange-200"
+                className="p-4 bg-gradient-to-r from-sky-50 to-transparent rounded-xl border-2 border-sky-200"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+                    <div className="w-8 h-8 bg-sky-800 rounded-full flex items-center justify-center">
                       <span className="text-sm font-bold text-white">
                         {idx + 1}
                       </span>
@@ -391,7 +391,7 @@ export default function DashboardOverview() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-bold text-orange-600">
+                    <p className="text-sm font-bold text-sky-800">
                       {product.view_count} views
                     </p>
                   </div>
@@ -455,7 +455,7 @@ export default function DashboardOverview() {
                     <div className="flex-1">
                       <div className="bg-gray-200 rounded-full h-6 overflow-hidden">
                         <div
-                          className="bg-gradient-to-r from-orange-400 to-orange-600 h-6 rounded-full flex items-center justify-end pr-2 transition-all"
+                          className="bg-gradient-to-r from-sky-500 to-sky-800 h-6 rounded-full flex items-center justify-end pr-2 transition-all"
                           style={{ width: `${percentage}%` }}
                         >
                           {percentage > 15 && (
@@ -481,7 +481,7 @@ export default function DashboardOverview() {
                   <p className="text-xs text-gray-600 font-medium mb-1">
                     Hari dengan Kunjungan Tertinggi
                   </p>
-                  <p className="text-lg font-bold text-orange-600">
+                  <p className="text-lg font-bold text-sky-800">
                     {Math.max(
                       ...analyticsData.daily_visits.map((d) => d.visits),
                     )}{' '}
@@ -492,7 +492,7 @@ export default function DashboardOverview() {
                   <p className="text-xs text-gray-600 font-medium mb-1">
                     Rata-rata Harian
                   </p>
-                  <p className="text-lg font-bold text-orange-600">
+                  <p className="text-lg font-bold text-sky-800">
                     {Math.round(
                       analyticsData.daily_visits.reduce(
                         (sum, d) => sum + d.visits,
@@ -506,7 +506,7 @@ export default function DashboardOverview() {
                   <p className="text-xs text-gray-600 font-medium mb-1">
                     Total Hari Dilacak
                   </p>
-                  <p className="text-lg font-bold text-orange-600">
+                  <p className="text-lg font-bold text-sky-800">
                     {analyticsData.daily_visits.length} hari
                   </p>
                 </div>
@@ -518,3 +518,7 @@ export default function DashboardOverview() {
     </div>
   )
 }
+
+
+
+
