@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { productsAPI } from '../../services/api'
+import { groceryCategories } from '../../data/groceryProducts'
 import {
   Plus,
   Trash2,
@@ -10,6 +11,10 @@ import {
   X,
 } from 'lucide-react'
 import { handleImageUpload } from '../../utils/imageUpload'
+
+const productCategories = groceryCategories.filter(
+  (category) => category !== 'Semua'
+)
 
 interface Product {
   id: string
@@ -407,16 +412,6 @@ export default function ProductManagement() {
                   />
                   <input
                     type="text"
-                    placeholder="Flavor"
-                    value={formData.flavor}
-                    onChange={(e) =>
-                      setFormData({ ...formData, flavor: e.target.value })
-                    }
-                    className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
-                    required
-                  />
-                  <input
-                    type="text"
                     placeholder="Harga (Rp)"
                     value={formData.price}
                     onChange={(e) =>
@@ -425,6 +420,21 @@ export default function ProductManagement() {
                     className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
                     required
                   />
+                  <select
+                    value={formData.flavor}
+                    onChange={(e) =>
+                      setFormData({ ...formData, flavor: e.target.value })
+                    }
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
+                    required
+                  >
+                    <option value="">Pilih Kategori</option>
+                    {productCategories.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <textarea

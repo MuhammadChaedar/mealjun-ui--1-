@@ -15,7 +15,8 @@ import {
 interface ContactMessage {
   id: string
   name: string
-  email: string
+  email?: string
+  phone_number?: string
   message: string
   reply_message?: string
   is_read: boolean
@@ -24,6 +25,19 @@ interface ContactMessage {
 }
 
 type ModalMode = 'view' | 'reply' | null
+
+const normalizeMessages = (data: any): ContactMessage[] => {
+  const messages = data?.data || data || []
+  if (!Array.isArray(messages)) return []
+
+  return messages.map((message) => ({
+    ...message,
+    id: String(message.id),
+    email: message.email || '',
+    phone_number: message.phone_number || message.phone || message.email || '',
+    is_read: Boolean(message.is_read),
+  }))
+}
 
 export default function ContactMessagesManagement() {
   const [messages, setMessages] = useState<ContactMessage[]>([])
@@ -55,11 +69,11 @@ export default function ContactMessagesManagement() {
         params.is_read = filterRead
       }
       const response = await contactMessagesAPI.getContactMessages(params)
-      setMessages(response.data.data || response.data)
+      setMessages(normalizeMessages(response.data))
       setPages(response.data.pages || 1)
     } catch (err: any) {
       console.error('Error loading messages:', err)
-      setError('Gagal memuat pesan kontak')
+      setError(err.response?.data?.message || 'Gagal memuat pesan kontak')
       setMessages([])
     } finally {
       setIsLoading(false)
@@ -102,6 +116,9 @@ export default function ContactMessagesManagement() {
 
     try {
       await contactMessagesAPI.deleteContactMessage(id)
+      setMessages((currentMessages) =>
+        currentMessages.filter((message) => message.id !== id)
+      )
       setSuccess(true)
       loadMessages()
       setTimeout(() => setSuccess(false), 3000)
@@ -137,7 +154,7 @@ export default function ContactMessagesManagement() {
             size={20}
             className="text-green-600 flex-shrink-0 mt-0.5"
           />
-          <p className="text-sm text-green-800">✓ Operasi berhasil dilakukan</p>
+          <p className="text-sm text-green-800">Operasi berhasil dilakukan</p>
         </div>
       )}
 
@@ -218,7 +235,9 @@ export default function ContactMessagesManagement() {
                       <h3 className="font-semibold text-gray-900">
                         {message.name}
                       </h3>
-                      <p className="text-sm text-gray-500">{message.email}</p>
+                      <p className="text-sm text-gray-500">
+                        {message.phone_number || message.email}
+                      </p>
                     </div>
                     {!message.is_read && (
                       <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
@@ -232,7 +251,7 @@ export default function ContactMessagesManagement() {
                   {message.reply_message && (
                     <div className="bg-green-50 rounded-lg p-3 mb-3 border-l-4 border-green-500">
                       <p className="text-sm font-semibold text-green-900 mb-1">
-                        ✓ Sudah Dibalas
+                        Sudah Dibalas
                       </p>
                       <p className="text-sm text-green-800">
                         {message.reply_message}
@@ -346,14 +365,20 @@ export default function ContactMessagesManagement() {
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Email
+                    Kontak
                   </label>
-                  <a
-                    href={`mailto:${selectedMessage.email}`}
-                    className="text-blue-600 hover:text-blue-700"
-                  >
-                    {selectedMessage.email}
-                  </a>
+                  {selectedMessage.email ? (
+                    <a
+                      href={`mailto:${selectedMessage.email}`}
+                      className="text-blue-600 hover:text-blue-700"
+                    >
+                      {selectedMessage.email}
+                    </a>
+                  ) : (
+                    <p className="text-gray-900">
+                      {selectedMessage.phone_number || '-'}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -370,7 +395,7 @@ export default function ContactMessagesManagement() {
                 {selectedMessage.reply_message && (
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      ✓ Balasan
+                      Balasan
                     </label>
                     <div className="bg-green-50 rounded-lg p-4 border border-green-200">
                       <p className="text-green-900 whitespace-pre-wrap">
@@ -455,7 +480,7 @@ export default function ContactMessagesManagement() {
                   </label>
                   <p className="text-gray-900">{selectedMessage.name}</p>
                   <p className="text-sm text-gray-500">
-                    {selectedMessage.email}
+                    {selectedMessage.phone_number || selectedMessage.email}
                   </p>
                 </div>
 

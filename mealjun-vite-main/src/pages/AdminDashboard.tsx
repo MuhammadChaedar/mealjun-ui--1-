@@ -4,10 +4,8 @@ import AdminHeader from '../components/admin/AdminHeader'
 import DashboardOverview from '../components/admin/DashboardOverview'
 import ProductManagement from '../components/admin/ProductManagement'
 import AboutManagement from '../components/admin/AboutManagement'
-import GalleryManagement from '../components/admin/GalleryManagement'
-import TestimonialManagement from '../components/admin/TestimonialManagement'
-import StoreLocator from '../components/admin/StoreLocator'
 import ContactMessagesManagement from '../components/admin/ContactMessagesManagement'
+import SalesInventoryReport from '../components/admin/SalesInventoryReport'
 
 export default function AdminDashboard() {
   return (
@@ -21,10 +19,8 @@ export default function AdminDashboard() {
           <Routes>
             <Route path="dashboard" element={<DashboardOverview />} />
             <Route path="products" element={<ProductManagement />} />
+            <Route path="sales-inventory" element={<SalesInventoryReport />} />
             <Route path="about" element={<AboutManagement />} />
-            <Route path="gallery" element={<GalleryManagement />} />
-            <Route path="testimonials" element={<TestimonialManagement />} />
-            <Route path="store-locator" element={<StoreLocator />} />
             <Route
               path="contact-messages"
               element={<ContactMessagesManagement />}

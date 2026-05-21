@@ -20,6 +20,27 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
+const getAuthPayload = (data: any) => data?.data || data || {}
+
+const getAuthToken = (data: any) =>
+  data?.token ||
+  data?.access_token ||
+  data?.auth_token ||
+  data?.plainTextToken ||
+  data?.bearer_token
+
+const getAuthUser = (data: any, email: string): User => {
+  const userData = data?.user || data?.admin || {}
+
+  return {
+    id: String(userData.id || 'admin'),
+    email: userData.email || email,
+    full_name:
+      userData.full_name || userData.name || userData.username || 'Admin Toko Erina',
+    role: userData.role || 'admin',
+  }
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [token, setToken] = useState<string | null>(null)
@@ -44,7 +65,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setError(null)
 
       const response = await authAPI.login(email, password)
-      const { token: newToken, user: userData } = response.data
+      const payload = getAuthPayload(response.data)
+      const newToken = getAuthToken(payload)
+
+      if (!newToken) {
+        throw new Error('Token autentikasi tidak ditemukan dari backend')
+      }
+
+      const userData = getAuthUser(payload, email)
 
       localStorage.setItem('auth_token', newToken)
       localStorage.setItem('auth_user', JSON.stringify(userData))

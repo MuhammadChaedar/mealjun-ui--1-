@@ -16,9 +16,7 @@ export default function Navbar({ cartItemCount = 0 }: NavbarProps) {
   const navItems = [
     { label: 'Beranda', href: '#beranda' },
     { label: 'Tentang', href: '#tentang' },
-    { label: 'Galeri', href: '#galeri' },
     { label: 'Produk', href: '#produk' },
-    { label: 'Review', href: '#review' },
     { label: 'Kontak', href: '#kontak' },
   ]
 

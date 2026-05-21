@@ -4,6 +4,7 @@ import { CheckCircle2, ClipboardCheck, Home, MapPin, PackageCheck, Truck } from 
 import Navbar from '../components/landing/Navbar'
 import Footer from '../components/landing/Footer'
 import type { CartItem } from '../App'
+import { ordersAPI } from '../services/api'
 
 type CheckoutPageProps = {
   cart: CartItem[]
@@ -19,6 +20,7 @@ export default function CheckoutPage({
   const navigate = useNavigate()
   const [orderCode, setOrderCode] = useState('')
   const [submittedTotal, setSubmittedTotal] = useState(0)
+  const [submitError, setSubmitError] = useState('')
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -38,8 +40,9 @@ export default function CheckoutPage({
   const shippingFee = cart.length > 0 ? 10000 : 0
   const grandTotal = cartTotal + shippingFee
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    setSubmitError('')
 
     const transactionCode = `MLJ-${Date.now().toString().slice(-8)}`
     const newOrder = {
@@ -61,16 +64,30 @@ export default function CheckoutPage({
       created_at: new Date().toISOString(),
     }
 
-    const savedOrders = JSON.parse(
-      localStorage.getItem('Toko Erina_orders') || '[]'
-    )
-    localStorage.setItem(
-      'Toko Erina_orders',
-      JSON.stringify([newOrder, ...savedOrders])
-    )
+    try {
+      const response = await ordersAPI.createOrder({
+        customer_name: newOrder.customer_name,
+        phone: newOrder.phone,
+        address: newOrder.address,
+        note: newOrder.note,
+        items: newOrder.items,
+        subtotal: newOrder.subtotal,
+        shipping_fee: newOrder.shipping_fee,
+        total: newOrder.total,
+      })
+      const savedOrder = response.data?.data || response.data || {}
+      newOrder.id =
+        savedOrder.order_code || savedOrder.id || savedOrder.code || transactionCode
+    } catch (err: any) {
+      setSubmitError(
+        err.response?.data?.message ||
+          'Gagal membuat transaksi. Pastikan backend aktif lalu coba lagi.'
+      )
+      return
+    }
 
     setSubmittedTotal(grandTotal)
-    setOrderCode(transactionCode)
+    setOrderCode(newOrder.id)
     clearCart()
   }
 
@@ -197,6 +214,11 @@ export default function CheckoutPage({
               onSubmit={handleSubmit}
               className="grid gap-6 lg:grid-cols-[1fr_380px]"
             >
+              {submitError && (
+                <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-800 lg:col-span-2">
+                  {submitError}
+                </div>
+              )}
               <section className="rounded-2xl border border-gray-100 bg-white p-6 shadow-lg">
                 <div className="mb-5 flex items-center gap-3">
                   <MapPin className="text-sky-600" size={24} />

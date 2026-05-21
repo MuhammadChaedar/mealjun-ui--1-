@@ -1,15 +1,22 @@
-import { useState, useEffect } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { productsAPI } from '../../services/api'
-import { Loader, ShoppingCart, X } from 'lucide-react'
+import { CreditCard, Loader, Search, ShoppingCart, X } from 'lucide-react'
+import { groceryCategories } from '../../data/groceryProducts'
 
 type ProductSectionProps = {
   addToCart: (product: any) => void
+  buyNow: (product: any) => void
 }
 
-export default function ProductSection({ addToCart }: ProductSectionProps) {
+export default function ProductSection({
+  addToCart,
+  buyNow,
+}: ProductSectionProps) {
   const [products, setProducts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null)
+  const [activeCategory, setActiveCategory] = useState('Semua')
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     ;(async () => {
@@ -47,6 +54,27 @@ export default function ProductSection({ addToCart }: ProductSectionProps) {
     return statusMap[status] || statusMap.available
   }
 
+  const categoryFor = (product: any) => product.category || product.flavor || 'Lainnya'
+
+  const filteredProducts = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase()
+
+    return products.filter((product) => {
+      const productCategory = categoryFor(product)
+      const matchesCategory =
+        activeCategory === 'Semua' || productCategory === activeCategory
+      const matchesSearch =
+        !query ||
+        [product.name, productCategory, product.description]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase()
+          .includes(query)
+
+      return matchesCategory && matchesSearch
+    })
+  }, [activeCategory, products, searchQuery])
+
   return (
     <section
       id="produk"
@@ -56,8 +84,41 @@ export default function ProductSection({ addToCart }: ProductSectionProps) {
         <div className="mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-3">Produk Kami</h2>
           <p className="text-gray-600">
-            Pilihan kue dan dessert terbaik dengan bahan berkualitas premium
+            Kebutuhan sembako dan perlengkapan harian pilihan Toko Erina
           </p>
+        </div>
+
+        <div className="mb-8 space-y-5 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+          <div className="relative">
+            <Search
+              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+              size={20}
+            />
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Cari produk sembako..."
+              className="h-12 w-full rounded-xl border border-gray-200 bg-gray-50 pl-12 pr-4 text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-sky-600 focus:bg-white focus:ring-2 focus:ring-sky-100"
+            />
+          </div>
+
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {groceryCategories.map((category) => (
+              <button
+                key={category}
+                type="button"
+                onClick={() => setActiveCategory(category)}
+                className={`shrink-0 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
+                  activeCategory === category
+                    ? 'border-sky-600 bg-sky-600 text-white'
+                    : 'border-gray-200 bg-white text-gray-600 hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700'
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
         </div>
 
         {loading ? (
@@ -66,13 +127,14 @@ export default function ProductSection({ addToCart }: ProductSectionProps) {
             <span className="text-gray-600">Memuat produk...</span>
           </div>
         ) : (
-          <div className="grid md:grid-cols-4 gap-6">
-            {products.map((p) => {
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {filteredProducts.map((p) => {
               const stock = getStockStatus(p.stock_status)
+              const productCategory = categoryFor(p)
               return (
                 <div
                   key={p.id}
-                  className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+                  className="flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
                   onClick={() => setSelectedProduct(p)}
                 >
                   {/* Image Container */}
@@ -117,31 +179,31 @@ export default function ProductSection({ addToCart }: ProductSectionProps) {
                   </div>
 
                   {/* Content */}
-                  <div className="p-5 space-y-3">
+                  <div className="flex flex-1 flex-col p-5">
                     {/* Title and Flavor */}
-                    <div>
-                      <h3 className="font-bold text-lg text-gray-900 mb-1">
+                    <div className="min-h-[86px]">
+                      <h3 className="mb-1 line-clamp-2 text-lg font-bold leading-snug text-gray-900">
                         {p.name}
                       </h3>
                       <p className="text-sm text-sky-600 font-semibold">
-                        {p.flavor}
+                        {productCategory}
                       </p>
                     </div>
 
                     {/* Description */}
-                    <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
+                    <p className="min-h-[44px] text-sm text-gray-600 line-clamp-2 leading-relaxed">
                       {p.description}
                     </p>
 
                     {/* Price */}
-                    <div className="pt-2 border-t border-gray-200">
+                    <div className="mt-auto pt-4 border-t border-gray-200">
                       <p className="text-2xl font-bold text-sky-600">
                         Rp {p.price?.toLocaleString('id-ID')}
                       </p>
                     </div>
 
-                    {/* Cart Action */}
-                    <div className="pt-2">
+                    {/* Product Actions */}
+                    <div className="grid grid-cols-2 gap-2 pt-2">
                       <button
                         type="button"
                         onClick={(e) => {
@@ -149,13 +211,29 @@ export default function ProductSection({ addToCart }: ProductSectionProps) {
                           addToCart(p)
                         }}
                         disabled={p.stock_status === 'out_of_stock'}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed text-white transition-colors text-sm font-semibold"
+                        className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-sky-600 bg-white px-3 py-2.5 text-sm font-semibold text-sky-700 transition-colors hover:bg-sky-50 disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
                       >
-                        <ShoppingCart size={18} />
+                        <ShoppingCart size={17} />
                         <span>
                           {p.stock_status === 'out_of_stock'
                             ? 'Stok Habis'
-                            : 'Tambah ke Keranjang'}
+                            : 'Keranjang'}
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          buyNow(p)
+                        }}
+                        disabled={p.stock_status === 'out_of_stock'}
+                        className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-sky-600 px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-sky-700 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
+                      >
+                        <CreditCard size={17} />
+                        <span>
+                          {p.stock_status === 'out_of_stock'
+                            ? 'Stok Habis'
+                            : 'Beli Sekarang'}
                         </span>
                       </button>
                     </div>
@@ -163,6 +241,17 @@ export default function ProductSection({ addToCart }: ProductSectionProps) {
                 </div>
               )
             })}
+          </div>
+        )}
+
+        {!loading && filteredProducts.length === 0 && (
+          <div className="rounded-2xl border border-gray-100 bg-white p-10 text-center shadow-sm">
+            <h3 className="text-xl font-bold text-gray-900">
+              Produk tidak ditemukan
+            </h3>
+            <p className="mt-2 text-gray-600">
+              Coba gunakan kata kunci lain atau pilih kategori Semua.
+            </p>
           </div>
         )}
 
@@ -226,7 +315,7 @@ export default function ProductSection({ addToCart }: ProductSectionProps) {
                     {selectedProduct.name}
                   </h2>
                   <p className="text-xl text-sky-600 font-semibold mb-4">
-                    {selectedProduct.flavor}
+                    {categoryFor(selectedProduct)}
                   </p>
                   <p className="text-3xl font-bold text-sky-600">
                     Rp {selectedProduct.price?.toLocaleString('id-ID')}
@@ -249,27 +338,49 @@ export default function ProductSection({ addToCart }: ProductSectionProps) {
                 {/* Divider */}
                 <div className="border-t border-gray-200"></div>
 
-                {/* Cart Order */}
+                {/* Product Actions */}
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
                     Pesan Sekarang
                   </h3>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      addToCart(selectedProduct)
-                      setSelectedProduct(null)
-                    }}
-                    disabled={selectedProduct.stock_status === 'out_of_stock'}
-                    className="w-full flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-700 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed text-white px-4 py-3 rounded-xl transition-colors font-semibold"
-                  >
-                    <ShoppingCart size={20} />
-                    <span>
-                      {selectedProduct.stock_status === 'out_of_stock'
-                        ? 'Stok Habis'
-                        : 'Tambah ke Keranjang'}
-                    </span>
-                  </button>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        addToCart(selectedProduct)
+                        setSelectedProduct(null)
+                      }}
+                      disabled={
+                        selectedProduct.stock_status === 'out_of_stock'
+                      }
+                      className="flex min-h-12 items-center justify-center gap-2 rounded-xl border border-sky-600 bg-white px-4 py-3 font-semibold text-sky-700 transition-colors hover:bg-sky-50 disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+                    >
+                      <ShoppingCart size={20} />
+                      <span>
+                        {selectedProduct.stock_status === 'out_of_stock'
+                          ? 'Stok Habis'
+                          : 'Tambah ke Keranjang'}
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        buyNow(selectedProduct)
+                        setSelectedProduct(null)
+                      }}
+                      disabled={
+                        selectedProduct.stock_status === 'out_of_stock'
+                      }
+                      className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-sky-600 px-4 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-sky-700 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
+                    >
+                      <CreditCard size={20} />
+                      <span>
+                        {selectedProduct.stock_status === 'out_of_stock'
+                          ? 'Stok Habis'
+                          : 'Beli Sekarang'}
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

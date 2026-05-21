@@ -1,29 +1,45 @@
+import { useEffect, useState } from 'react'
 import { Award, Heart, PackageCheck, ShoppingBasket, Target } from 'lucide-react'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
+import { aboutAPI } from '../../services/api'
+import { defaultAboutContent } from '../../data/aboutContent'
 
 export default function AboutSection() {
+  const [aboutContent, setAboutContent] = useState(defaultAboutContent)
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const response = await aboutAPI.getPublicAbout()
+        setAboutContent({
+          ...defaultAboutContent,
+          ...(response.data.data || response.data || {}),
+        })
+      } catch {
+        setAboutContent(defaultAboutContent)
+      }
+    })()
+  }, [])
+
   const features = [
     {
       icon: Target,
       title: 'Visi Kami',
-      description:
-        'Menjadi toko sembako online yang mudah diakses, terpercaya, dan membantu keluarga memenuhi kebutuhan harian.',
+      description: aboutContent.vision,
       color: 'from-sky-700 to-cyan-600',
       bgColor: 'bg-sky-50',
     },
     {
       icon: Award,
       title: 'Misi Kami',
-      description:
-        'Menyediakan produk kebutuhan pokok dengan harga bersahabat, stok rapi, dan proses belanja yang praktis.',
+      description: aboutContent.mission,
       color: 'from-emerald-600 to-teal-500',
       bgColor: 'bg-emerald-50',
     },
     {
       icon: Heart,
       title: 'Komitmen Kami',
-      description:
-        'Melayani pelanggan dengan ramah, menjaga kualitas barang, dan membantu pesanan sampai sesuai kebutuhan.',
+      description: aboutContent.commitment,
       color: 'from-sky-500 to-sky-500',
       bgColor: 'bg-sky-50',
     },
@@ -52,12 +68,10 @@ export default function AboutSection() {
             Tentang Kami
           </div>
           <h2 className="mb-4 text-4xl font-bold text-slate-950 md:text-5xl">
-            Toko Erina, Sahabat Belanja Harian Anda
+            {aboutContent.title}
           </h2>
           <p className="mx-auto max-w-3xl text-lg leading-relaxed text-gray-600">
-            Kami menghadirkan toko sembako yang sederhana, rapi, dan mudah
-            diakses untuk membantu pelanggan memenuhi kebutuhan rumah tangga
-            setiap hari.
+            {aboutContent.description}
           </p>
         </div>
 
@@ -78,10 +92,7 @@ export default function AboutSection() {
             </div>
 
             <p className="mb-8 text-lg leading-relaxed text-gray-700">
-              Toko Erina menyediakan berbagai kebutuhan pokok dan perlengkapan
-              rumah tangga untuk pelanggan sekitar. Mulai dari bahan dapur,
-              minuman, makanan instan, sampai kebutuhan harian lainnya, semuanya
-              disiapkan agar proses belanja lebih nyaman dan efisien.
+              {aboutContent.story || aboutContent.description}
             </p>
 
             <div className="space-y-4">
@@ -106,7 +117,7 @@ export default function AboutSection() {
           <div className="order-1 lg:order-2">
             <div className="relative overflow-hidden rounded-3xl bg-white p-8 shadow-2xl">
               <ImageWithFallback
-                src="/toko-erina-logo.svg"
+                src={aboutContent.image_url || '/toko-erina-logo.svg'}
                 alt="Logo Toko Erina"
                 className="h-96 w-full rounded-2xl object-contain"
               />

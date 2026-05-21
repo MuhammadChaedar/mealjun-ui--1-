@@ -2,13 +2,16 @@ import { useState, useEffect } from 'react'
 import { aboutAPI } from '../../services/api'
 import { AlertCircle, Loader, Save, Upload, X } from 'lucide-react'
 import { handleImageUpload } from '../../utils/imageUpload'
+import { defaultAboutContent } from '../../data/aboutContent'
 
 interface AboutData {
   id?: string
   title: string
   description: string
+  story: string
   vision: string
   mission: string
+  commitment: string
   image_url?: string
   image_base64?: string
   whatsapp_number: string
@@ -18,14 +21,8 @@ interface AboutData {
 
 export default function AboutManagement() {
   const [formData, setFormData] = useState<AboutData>({
-    title: '',
-    description: '',
-    vision: '',
-    mission: '',
+    ...defaultAboutContent,
     image_base64: '',
-    whatsapp_number: '',
-    email: '',
-    address: '',
   })
 
   const [isLoading, setIsLoading] = useState(true)
@@ -46,6 +43,7 @@ export default function AboutManagement() {
       const response = await aboutAPI.getPublicAbout()
       const data = response.data.data || response.data
       setFormData({
+        ...defaultAboutContent,
         ...data,
         image_base64: '',
       })
@@ -54,14 +52,8 @@ export default function AboutManagement() {
       setError(err.response?.data?.message || 'Gagal memuat data tentang')
       // Set default values if API fails
       setFormData({
-        title: 'Tentang Toko Erina',
-        description: '',
-        vision: '',
-        mission: '',
+        ...defaultAboutContent,
         image_base64: '',
-        whatsapp_number: '',
-        email: '',
-        address: '',
       })
     } finally {
       setIsLoading(false)
@@ -94,8 +86,10 @@ export default function AboutManagement() {
       const submitData: Record<string, string> = {
         title: formData.title,
         description: formData.description,
+        story: formData.story,
         vision: formData.vision,
         mission: formData.mission,
+        commitment: formData.commitment,
         whatsapp_number: formData.whatsapp_number,
         email: formData.email,
         address: formData.address,
@@ -176,15 +170,33 @@ export default function AboutManagement() {
         </div>
 
         <div>
-          <label className="block text-sm text-gray-700 mb-2">Deskripsi</label>
+          <label className="block text-sm text-gray-700 mb-2">
+            Deskripsi Singkat
+          </label>
           <textarea
             value={formData.description}
             onChange={(e) =>
               setFormData({ ...formData, description: e.target.value })
             }
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
-            rows={6}
-            placeholder="Deskripsi tentang Toko Erina..."
+            rows={4}
+            placeholder="Deskripsi singkat yang tampil di awal section Tentang..."
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm text-gray-700 mb-2">
+            Isi Utama Halaman Tentang
+          </label>
+          <textarea
+            value={formData.story}
+            onChange={(e) =>
+              setFormData({ ...formData, story: e.target.value })
+            }
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
+            rows={5}
+            placeholder="Cerita utama tentang Toko Erina yang tampil di samping gambar..."
             required
           />
         </div>
@@ -217,6 +229,20 @@ export default function AboutManagement() {
               required
             />
           </div>
+        </div>
+
+        <div>
+          <label className="block text-sm text-gray-700 mb-2">Komitmen</label>
+          <textarea
+            value={formData.commitment}
+            onChange={(e) =>
+              setFormData({ ...formData, commitment: e.target.value })
+            }
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
+            rows={4}
+            placeholder="Komitmen pelayanan Toko Erina..."
+            required
+          />
         </div>
 
         <div>

@@ -56,8 +56,7 @@ export default function AdminLogin() {
               <p className="font-semibold">Dashboard Toko</p>
             </div>
             <p className="text-sm leading-relaxed text-sky-100">
-              Masuk untuk mengatur produk, galeri, testimoni, lokasi toko, dan
-              pesan pelanggan.
+              Masuk untuk mengatur produk, halaman tentang, dan pesan pelanggan.
             </p>
           </div>
         </div>

@@ -1,9 +1,7 @@
 import { useEffect } from 'react'
 import HeroSection from '../components/landing/HeroSection'
 import AboutSection from '../components/landing/AboutSection'
-import GallerySection from '../components/landing/GallerySection'
 import ProductSection from '../components/landing/ProductSection'
-import ReviewSection from '../components/landing/ReviewSection'
 import ContactSection from '../components/landing/ContactSection'
 import Navbar from '../components/landing/Navbar'
 import Footer from '../components/landing/Footer'
@@ -12,11 +10,13 @@ import { analyticsTrackingAPI } from '../services/api'
 
 type LandingPageProps = {
   addToCart: (product: any) => void
+  buyNow: (product: any) => void
   cartItemCount: number
 }
 
 export default function LandingPage({
   addToCart,
+  buyNow,
   cartItemCount,
 }: LandingPageProps) {
   useEffect(() => {
@@ -58,9 +58,7 @@ export default function LandingPage({
       <main>
         <HeroSection />
         <AboutSection />
-        <GallerySection />
-        <ProductSection addToCart={addToCart} />
-        <ReviewSection />
+        <ProductSection addToCart={addToCart} buyNow={buyNow} />
         <ContactSection />
       </main>
       <Footer />

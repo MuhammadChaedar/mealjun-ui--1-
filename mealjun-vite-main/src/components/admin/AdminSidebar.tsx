@@ -2,10 +2,8 @@ import { NavLink } from 'react-router-dom'
 import {
   LayoutDashboard,
   ShoppingBag,
+  FileSpreadsheet,
   Info,
-  Image,
-  Star,
-  MapPin,
   Mail,
 } from 'lucide-react'
 
@@ -13,10 +11,12 @@ export default function AdminSidebar() {
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/admin/dashboard' },
     { icon: ShoppingBag, label: 'Produk', path: '/admin/products' },
+    {
+      icon: FileSpreadsheet,
+      label: 'Inventaris Penjualan',
+      path: '/admin/sales-inventory',
+    },
     { icon: Info, label: 'Tentang', path: '/admin/about' },
-    { icon: Image, label: 'Galeri', path: '/admin/gallery' },
-    { icon: Star, label: 'Testimoni', path: '/admin/testimonials' },
-    { icon: MapPin, label: 'Lokasi Toko', path: '/admin/store-locator' },
     { icon: Mail, label: 'Pesan Kontak', path: '/admin/contact-messages' },
   ]
 

@@ -145,17 +145,17 @@ export default function ContactSection() {
               <div className="space-y-3 text-gray-700">
                 <div className="flex justify-between">
                   <span className="font-semibold">Senin - Jumat</span>
-                  <span>08:00 - 17:00</span>
+                  <span>07:00 - 22:00 WIB</span>
                 </div>
                 <div className="border-t border-sky-200"></div>
                 <div className="flex justify-between">
                   <span className="font-semibold">Sabtu</span>
-                  <span>08:00 - 14:00</span>
+                  <span>07:00 - 23:00 WIB</span>
                 </div>
                 <div className="border-t border-sky-200"></div>
                 <div className="flex justify-between">
                   <span className="font-semibold">Minggu</span>
-                  <span className="text-sky-600">Tutup</span>
+                  <span>08:00 - 22:00 WIB</span>
                 </div>
               </div>
             </div>

@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react'
-import { dashboardAPI } from '../../services/api'
+import { useMemo, useState, useEffect } from 'react'
+import { dashboardAPI, ordersAPI, productsAPI } from '../../services/api'
+import { isDessertProduct } from '../../data/groceryProducts'
 import {
-  Users,
   Package,
-  MapPin,
   MessageSquare,
   Zap,
   TrendingUp,
@@ -17,11 +16,7 @@ interface DashboardData {
     total_products: number
     featured_products: number
     out_of_stock_products: number
-    total_testimonials: number
-    pending_testimonials: number
-    total_store_locations: number
     unread_messages: number
-    total_captions_generated: number
   }
   recent_messages: Array<{
     id: string
@@ -37,6 +32,13 @@ interface DashboardData {
     name: string
     view_count: number
   }>
+}
+
+interface Product {
+  id: string
+  name: string
+  flavor: string
+  image_url: string
 }
 
 interface AnalyticsData {
@@ -60,6 +62,8 @@ interface CustomerOrder {
   id: string
   customer_name: string
   phone: string
+  address?: string
+  note?: string
   items: Array<{
     name: string
     price: number
@@ -70,37 +74,143 @@ interface CustomerOrder {
   created_at: string
 }
 
+const normalizeOrders = (data: any): CustomerOrder[] => {
+  const orders = data?.data || data || []
+  return Array.isArray(orders) ? orders : []
+}
+
+const getOrderStatusStyle = (status: string) => {
+  const normalizedStatus = status.toLowerCase()
+
+  if (normalizedStatus.includes('selesai')) {
+    return 'bg-green-100 text-green-700'
+  }
+
+  return 'bg-yellow-100 text-yellow-700'
+}
+
 export default function DashboardOverview() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
   const [customerOrders, setCustomerOrders] = useState<CustomerOrder[]>([])
+  const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const frequentlyBoughtProducts = useMemo(() => {
+    const productMap = new Map(
+      products
+        .filter((product) => product.name)
+        .map((product) => [product.name.toLowerCase(), product])
+    )
+    const purchaseMap = new Map<
+      string,
+      {
+        name: string
+        quantity: number
+        revenue: number
+        product?: Product
+      }
+    >()
+
+    customerOrders.forEach((order) => {
+      ;(order.items || []).forEach((item) => {
+        if (!item.name) return
+        if (isDessertProduct({ name: item.name })) return
+
+        const key = item.name.toLowerCase()
+        const current = purchaseMap.get(key) || {
+          name: item.name,
+          quantity: 0,
+          revenue: 0,
+          product: productMap.get(key),
+        }
+
+        current.quantity += Number(item.quantity || 0)
+        current.revenue += Number(item.price || 0) * Number(item.quantity || 0)
+        current.product = current.product || productMap.get(key)
+        purchaseMap.set(key, current)
+      })
+    })
+
+    return Array.from(purchaseMap.values())
+      .sort((a, b) => b.quantity - a.quantity || b.revenue - a.revenue)
+      .slice(0, 5)
+  }, [customerOrders, products])
+
   useEffect(() => {
     loadDashboard()
-    const savedOrders = JSON.parse(
-      localStorage.getItem('Toko Erina_orders') || '[]'
-    )
-    setCustomerOrders(savedOrders)
   }, [])
 
   const loadDashboard = async () => {
     setLoading(true)
     setError(null)
     try {
-      const [dashRes, analyticsRes] = await Promise.all([
-        dashboardAPI.getDashboard(),
-        dashboardAPI.getAnalytics(1),
-      ])
-      setDashboardData(dashRes.data)
-      setAnalyticsData(analyticsRes.data)
+      const ordersRes = await ordersAPI.getOrders({ limit: 20 })
+      const groceryOrders = normalizeOrders(ordersRes.data).filter(
+        (order: CustomerOrder) =>
+          (order.items || []).every(
+            (item) => !isDessertProduct({ name: item.name })
+          )
+      )
+      setCustomerOrders(groceryOrders)
+
+      const productsRes = await productsAPI.getPublicProducts({ limit: 100 })
+      const productList = productsRes.data.data || []
+      setProducts(productList)
+
+      try {
+        const dashRes = await dashboardAPI.getDashboard()
+        setDashboardData(dashRes.data)
+      } catch {
+        setDashboardData({
+          summary: {
+            total_products: productList.length,
+            featured_products: productList.filter(
+              (product: any) => product.is_featured
+            ).length,
+            out_of_stock_products: productList.filter(
+              (product: any) => product.stock_status === 'out_of_stock'
+            ).length,
+            unread_messages: 0,
+          },
+          recent_messages: [],
+          visitor_today: 0,
+          visitor_week: 0,
+          top_products: [],
+        })
+      }
+
+      try {
+        const analyticsRes = await dashboardAPI.getAnalytics(1)
+        setAnalyticsData(analyticsRes.data)
+      } catch {
+        setAnalyticsData(null)
+      }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Gagal memuat dashboard')
-      console.error('Failed to load dashboard:', err)
+      setError(
+        err.response?.data?.message ||
+          'Gagal memuat data produk dan pesanan dashboard'
+      )
+      console.error('Failed to load dashboard data:', err)
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleOrderStatusChange = (orderId: string, status: string) => {
+    const previousOrders = customerOrders
+    const nextOrders = customerOrders.map((order) =>
+      order.id === orderId ? { ...order, status } : order
+    )
+
+    setCustomerOrders(nextOrders)
+    ordersAPI.updateOrderStatus(orderId, status).catch((err) => {
+      setCustomerOrders(previousOrders)
+      setError(
+        err.response?.data?.message || 'Gagal mengubah status pesanan'
+      )
+    })
   }
 
   if (loading) {
@@ -154,8 +264,8 @@ export default function DashboardOverview() {
         </button>
       </div>
 
-      {/* Summary Stats - 4 Columns */}
-      <div className="grid md:grid-cols-4 gap-5">
+      {/* Summary Stats */}
+      <div className="grid gap-5 md:grid-cols-2">
         {/* Total Products */}
         <div className="bg-gradient-to-br from-sky-50 to-sky-100 border-2 border-sky-200 rounded-2xl p-6">
           <div className="flex items-center justify-between mb-4">
@@ -189,44 +299,10 @@ export default function DashboardOverview() {
           </div>
           <div className="text-xs text-red-700">Butuh restok</div>
         </div>
-
-        {/* Testimonials */}
-        <div className="bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-200 rounded-2xl p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p className="text-sm text-green-600 font-medium mb-1">
-                Testimonial
-              </p>
-              <p className="text-3xl font-bold text-green-900">
-                {summary?.total_testimonials || 0}
-              </p>
-            </div>
-            <Users size={32} className="text-green-500 opacity-20" />
-          </div>
-          <div className="text-xs text-green-700">
-            {summary?.pending_testimonials || 0} pending
-          </div>
-        </div>
-
-        {/* Store Locations */}
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 rounded-2xl p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p className="text-sm text-blue-600 font-medium mb-1">
-                Lokasi Toko
-              </p>
-              <p className="text-3xl font-bold text-blue-900">
-                {summary?.total_store_locations || 0}
-              </p>
-            </div>
-            <MapPin size={32} className="text-blue-500 opacity-20" />
-          </div>
-          <div className="text-xs text-blue-700">Aktif</div>
-        </div>
       </div>
 
-      {/* Secondary Stats - 4 Columns */}
-      <div className="grid md:grid-cols-4 gap-5">
+      {/* Secondary Stats */}
+      <div className="grid gap-5 md:grid-cols-3">
         {/* Unread Messages */}
         <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
           <div className="flex items-center justify-between mb-4">
@@ -239,21 +315,6 @@ export default function DashboardOverview() {
               </p>
             </div>
             <MessageSquare size={32} className="text-gray-400 opacity-40" />
-          </div>
-        </div>
-
-        {/* Generated Captions */}
-        <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p className="text-sm text-gray-600 font-medium mb-1">
-                Caption Terbuat
-              </p>
-              <p className="text-3xl font-bold text-gray-900">
-                {summary?.total_captions_generated || 0}
-              </p>
-            </div>
-            <Zap size={32} className="text-gray-400 opacity-40" />
           </div>
         </div>
 
@@ -320,12 +381,40 @@ export default function DashboardOverview() {
                         {order.id}
                       </p>
                     </div>
-                    <span className="px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-semibold">
-                      {order.status}
-                    </span>
+                    <select
+                      value={order.status}
+                      onChange={(e) =>
+                        handleOrderStatusChange(order.id, e.target.value)
+                      }
+                      className={`rounded-full px-3 py-1 text-xs font-semibold outline-none ${getOrderStatusStyle(
+                        order.status
+                      )}`}
+                    >
+                      <option value="Menunggu Diproses">
+                        Menunggu Diproses
+                      </option>
+                      <option value="Pesanan Selesai">Pesanan Selesai</option>
+                    </select>
                   </div>
 
-                  <p className="text-sm text-gray-600 mb-2">{order.phone}</p>
+                  <div className="mb-3 space-y-1 text-sm text-gray-600">
+                    <p>{order.phone}</p>
+                    {order.address && (
+                      <div className="rounded-lg border border-sky-100 bg-white/70 p-3">
+                        <p className="mb-1 text-xs font-semibold uppercase text-sky-800">
+                          Alamat Pengiriman
+                        </p>
+                        <p className="leading-relaxed text-gray-700">
+                          {order.address}
+                        </p>
+                      </div>
+                    )}
+                    {order.note && (
+                      <p className="text-xs text-gray-500">
+                        Catatan: {order.note}
+                      </p>
+                    )}
+                  </div>
 
                   <div className="space-y-1 mb-3">
                     {order.items.map((item, index) => (
@@ -366,38 +455,64 @@ export default function DashboardOverview() {
           </div>
         </div>
 
-        {/* Top Products */}
+        {/* Frequently Bought Products */}
         <div className="bg-white border-2 border-gray-200 rounded-2xl p-6">
           <h3 className="text-xl font-bold text-gray-900 mb-4">
-            Produk Paling Dilihat
+            Produk yang Sering Dibeli
           </h3>
           <div className="space-y-3">
-            {dashboardData?.top_products.slice(0, 5).map((product, idx) => (
-              <div
-                key={product.id}
-                className="p-4 bg-gradient-to-r from-sky-50 to-transparent rounded-xl border-2 border-sky-200"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-sky-800 rounded-full flex items-center justify-center">
-                      <span className="text-sm font-bold text-white">
-                        {idx + 1}
-                      </span>
+            {frequentlyBoughtProducts.length === 0 ? (
+              <div className="p-6 rounded-xl border-2 border-gray-200 bg-gray-50 text-center">
+                <p className="font-semibold text-gray-900">
+                  Belum ada produk yang dibeli
+                </p>
+                <p className="text-sm text-gray-600 mt-1">
+                  Data akan dihitung dari pesanan konsumen yang masuk.
+                </p>
+              </div>
+            ) : (
+              frequentlyBoughtProducts.map((product, idx) => (
+                <div
+                  key={product.name}
+                  className="p-4 bg-gradient-to-r from-sky-50 to-transparent rounded-xl border-2 border-sky-200"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sky-800">
+                        <span className="text-sm font-bold text-white">
+                          {idx + 1}
+                        </span>
+                      </div>
+                      {product.product?.image_url && (
+                        <img
+                          src={product.product.image_url}
+                          alt={product.name}
+                          className="h-12 w-12 shrink-0 rounded-lg object-cover"
+                        />
+                      )}
+                      <div className="min-w-0">
+                        <p className="truncate font-semibold text-gray-900">
+                          {product.name}
+                        </p>
+                        {product.product?.flavor && (
+                          <p className="text-xs font-semibold text-sky-700">
+                            {product.product.flavor}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-semibold text-gray-900">
-                        {product.name}
+                    <div className="shrink-0 text-right">
+                      <p className="text-sm font-bold text-sky-800">
+                        {product.quantity} dibeli
+                      </p>
+                      <p className="text-xs font-semibold text-gray-500">
+                        Rp {product.revenue.toLocaleString('id-ID')}
                       </p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm font-bold text-sky-800">
-                      {product.view_count} views
-                    </p>
-                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </div>

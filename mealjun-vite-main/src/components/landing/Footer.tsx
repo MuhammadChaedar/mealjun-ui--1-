@@ -41,26 +41,10 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="#galeri"
-                  className="hover:text-sky-400 transition-colors"
-                >
-                  Galeri
-                </a>
-              </li>
-              <li>
-                <a
                   href="#produk"
                   className="hover:text-sky-400 transition-colors"
                 >
                   Produk
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#review"
-                  className="hover:text-sky-400 transition-colors"
-                >
-                  Review
                 </a>
               </li>
               <li>
